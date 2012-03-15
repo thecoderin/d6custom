@@ -1,0 +1,6 @@
+; $Id$//
+name =Recent Related SWJ Content
+description = Module to display Recent Related SWJ Content blocks
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma

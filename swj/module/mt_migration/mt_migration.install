@@ -1,0 +1,44 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+
+ function mt_migration_install() {			
+  $values = array('last_node'=>0, 'updated'=>0);	
+  $variable = serialize($values);
+  variable_set('mt_migration',$variable);
+  $val2 = array('last_node'=>0, 'updated'=>0);
+  $var2 = serialize($val2);
+  variable_set('mt_cleanup',$var2);
+  drupal_install_schema('mt_migration');
+}
+
+function mt_migration_uninstall() {
+  drupal_uninstall_schema('mt_migration');
+  variable_del('mt_migration');
+  variable_del('mt_cleanup');
+} 
+
+
+function mt_migration_schema() {
+  $schema = array();
+  $schema['mt_migration'] = array(
+	'description' => 'Storage of mt_author mapping with author profile',
+	'fields' => array(
+		'mt_author' => array(
+			'description' => 'primary key to identify mt_author',
+			'type' => 'int',
+			'unsigned' => TRUE,
+			'not null' => TRUE),
+		
+		'op_author' =>array(
+			'description' => 'author profile for mt_author',
+			'type' => 'int',
+			'unsigned' => TRUE,
+			'not null' => TRUE),
+		),
+	'primary key' => array('mt_author'),
+			);
+  return $schema;	
+}

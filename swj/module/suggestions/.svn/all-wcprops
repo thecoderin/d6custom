@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/8979/SWJ/trunk/sites/all/modules/smallwars/suggestions
+END
+suggestions.install
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/8942/SWJ/trunk/sites/all/modules/smallwars/suggestions/suggestions.install
+END
+suggestions.info
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/8889/SWJ/trunk/sites/all/modules/smallwars/suggestions/suggestions.info
+END
+suggestions-block.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/8955/SWJ/trunk/sites/all/modules/smallwars/suggestions/suggestions-block.tpl.php
+END
+style.css
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/8934/SWJ/trunk/sites/all/modules/smallwars/suggestions/style.css
+END
+suggestions-page.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/8942/SWJ/trunk/sites/all/modules/smallwars/suggestions/suggestions-page.tpl.php
+END
+suggestions.module
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/8979/SWJ/trunk/sites/all/modules/smallwars/suggestions/suggestions.module
+END

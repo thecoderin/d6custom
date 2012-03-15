@@ -1,0 +1,24 @@
+name = Smallwars Theme
+description = Smallwars Theme :  Theme for Smallwars site sub theme to OP theme. Created by Corratech.
+base theme = openpublish_theme
+version = 0.3-beta
+core = 6.x
+engine = phptemplate
+ 
+; SubTheme-Specific CSS
+stylesheets[all][]   = css/main.css
+
+scripts[] = "js/common.js"
+
+regions[left] = Left Sidebar
+regions[quote] = Qutation Area
+regions[announcement] = Announcements
+regions[below_title] = Just Below the Title
+regions[side_a] = Side A
+regions[side_b] = Side B
+regions[right] = Right Sidebar
+regions[over_content] = On Top of Content
+regions[under_content] = Underneath the Content
+regions[header] = Header
+regions[footer_swj] = Footer
+regions[welcome] = Welcome Content

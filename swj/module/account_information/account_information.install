@@ -1,0 +1,23 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+  
+function account_information_install() {			
+	$values = array('username_label'=>NULL, 'username_desc'=>NULL, 'email_label'=>NULL, 'email_desc'=>NULL);	
+	$variable = serialize($values);
+	variable_set('account_information',$variable);	
+	
+/* For Login Page setting  variables */
+  $value1 = array('login_user_label'=>NULL,  'login_user_desc'=>NULL, 'login_pass_label'=>NULL, 'login_pass_desc'=>NULL);
+  $var1 = serialize($value1);
+  variable_set('login_information',$var1);	
+}
+
+function account_information_uninstall() {
+  variable_del('account_information');
+  /* For Login Page setting  variables */
+  variable_del('login_information');
+}
+?>

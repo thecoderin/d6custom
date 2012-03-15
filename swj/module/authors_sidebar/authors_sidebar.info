@@ -1,0 +1,6 @@
+; $Id$//
+name = SWJ Author Sidebar
+description = SWJ Author Sidebar Management.
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-beta

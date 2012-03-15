@@ -1,0 +1,15 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+
+ function workflow_set_install() {			
+  $values = array('last_node'=>0, 'updated'=>0);	
+  $variable = serialize($values);
+  variable_set('workflow_set',$variable);
+}
+
+function workflow_set_uninstall() {
+  variable_del('workflow_set');
+} 

@@ -1,0 +1,455 @@
+<?php
+
+function journal_mgt_cron()
+{
+  journal_mgt_runCheck();
+  return true;
+}
+
+function journal_mgt_menu() {
+  $items['jrnl/iss/latest'] = array(
+    'title' => '',
+	'description' => 'Current Issue',
+    'page callback' => 'journal_mgt_getLatest',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  
+  $items['jrnl/iss/archive'] = array(
+    'title' => '',
+	'description' => 'Journal Archives',
+	'page callback' => 'journal_mgt_archive',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );
+  
+  $items['jrnl'] = array(
+    'title' => t('Recent Articles'),
+	'description' => 'Journal Articles',
+	'page callback' => 'jrnl_redirect',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );
+  
+  $items['admin/settings/journal-issue'] = array(
+   'title' => 'Journal Issue Management',
+   'description' => 'Setting CRON Jobs for Journal Issue Creation',
+   'page callback' => 'journal_mgt_settings',
+   'access arguments' => array('Journal Issue Administration'),
+   'type' =>MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+* Implementation of hook_block().
+*/
+function journal_mgt_block($op = 'list', $delta = 0) {
+  $block = array();
+  switch ($op) {
+    case 'list':
+	  $block[0]['info'] = t('Journal Archives');
+    break;
+    case 'view':
+      switch ($delta) {
+	    case 0:
+		  $block['content'] = journal_mgt_archive();
+		break;
+	  }
+  }
+  return $block;
+}
+
+function journal_mgt_perm() {
+   return array(
+			"Journal Issue Administration"
+		);
+}
+
+function journal_mgt_settings() {
+  
+  return drupal_get_form('journal_mgt_settings_form');
+}
+
+function journal_mgt_settings_form() {
+  $form = array();
+  $variables = getSettings();
+  if ($variables['timestamp']) {
+    $year = date('Y', $variables['timestamp']);
+  }
+  else $year = date('Y');
+  $form['start_year'] = array(
+						  '#type' => 'select',
+						  '#title' => t('Select a Starting Year'),
+						  '#default_value' => $year,
+						  '#options' => getYears(),
+						);
+  $form['per_cron'] = array(
+                         '#type'=> 'textfield',
+						 '#title' => t('Months Per Cron'),
+						 '#default_value' => 12,
+						 '#size' => 3,
+						 '#maxlength'=>3,
+						 '#required' => TRUE,
+                       );
+  $form['submit'] = array(
+						'#type' => 'submit',
+						'#value' => t('Save'),
+						'#submit' => array('journal_mgt_save'),
+                       );
+  return $form;
+}
+
+function journal_mgt_archive() {
+  return drupal_get_form('journal_mgt_archive_form');
+}
+
+function journal_mgt_archive_form() {
+  $form = array();
+  $form['archive_select'] =  array(
+						  '#type' => 'select',
+						  '#options' => getList(),
+						);
+  $form['archive_button'] = array(
+						  '#type' => 'submit',
+						  '#name' => 'edit-go',
+						  '#id' => 'edit-go',
+						  '#value' => t('Go'),
+						  '#submit' =>array('journal_archive_go'),
+						);
+  
+  
+  return $form;
+}
+
+function journal_archive_go($form, &$form_state) {
+  drupal_goto($form_state['values']['archive_select']);
+}
+
+function getList() {
+$list = array();
+ $query = "SELECT nid as id, created FROM `node` n WHERE n.type = 'journal' and status>0 ORDER BY created DESC";
+ $result = db_query($query);
+ while ($obj = db_fetch_object($result)) {
+   $link = "node/".$obj->id;
+   $display = date("F, Y", $obj->created);
+   $list[$link] = $display;
+ }
+ return $list;
+}
+
+function journal_mgt_save($form, &$form_state) {
+  $variables = array();
+  $year = $form_state['values']['start_year'];
+  $month = 1;
+  $variables['timestamp'] = firstOfMonth($year, $month);
+  $variables['per_cron'] = $form_state['values']['per_cron'];
+  $content = serialize($variables);
+  variable_set('journal_mgt_setting',$content);
+}
+
+function journal_mgt_runCheck() {
+  $variables = getSettings();
+  journal_mgt_issueCreator($variables['timestamp'], $variables['per_cron']);
+}
+function journal_mgt_issueCreator($timestamp, $cron, $count=1) {
+  $current = time();
+  //print "<br>count: ".$count." timestamp: ".$timestamp."date: ".date("m, Y", $timestamp);
+
+  if ($current > $timestamp) {
+    $month = date('m', $timestamp);
+    $year = date('y', $timestamp);
+    $from = firstOfMonth($year, $month);
+    $to = lastOfMonth($year, $month);
+    $queryJ =   "SELECT count(n.title)as total FROM {node} n WHERE (n.type='journal') AND (n.created >= ".$from.") AND (n.created < ".$to.")";
+    $queryA = "SELECT count(n.title) as total FROM {node} n WHERE (n.type='article') AND (n.created >=".$from.") AND (n.created <".$to.") AND (n.status =1)";
+    $obJ = db_fetch_object(db_query($queryJ));
+    $obA = db_fetch_object(db_query($queryA));
+    if ($obJ->total > 0) {
+      $message = "Journal Exists: Running Jurnal Issue Check -".$month.", ".$year;
+    }
+	else if ($obJ->total ==0 && $obA->total > 0){
+      $node = new StdClass();
+      $node->type="journal";
+      $node->title = date("F, Y", $timestamp);
+	  $node->created = $timestamp;
+      $node->status = 1;
+      $node->uid = 1;
+	  $node->language = 'en';
+      content_presave($node);
+      node_save($node);
+   content_insert($node);
+   unset($node);
+   $message = "Journal  Created: Running Jurnal Issue Check ".$month.", ".$year;
+   $variables['timestamp'] = $timestamp;
+   $variables['per_cron'] = $cron;
+   $content = serialize($variables);
+   variable_set('journal_mgt_setting',$content);
+  }
+  if ($message) drupal_set_message($message);
+  $count++;
+  if( $count > $cron) {
+    return true;
+  }
+  else {
+    $timestamp = nextMonth($year, $month);
+	return journal_mgt_issueCreator($timestamp, $cron, $count);
+  }
+  }else return true;
+}
+function getSettings() {
+  return unserialize(variable_get('journal_mgt_setting',NULL));
+}
+
+function getYears() {
+$current = date('Y');
+$years = array();
+  for($i =0; $i < 10; $i++) {
+    $years[$current - $i] = $current - $i;
+  }
+  return $years;
+}
+
+function journal_mgt_getLatest() {
+  $query = "SELECT node.nid as nid FROM {node} node
+  LEFT JOIN {node_revisions node_revisions} ON node.vid = node_revisions.vid
+  LEFT JOIN {content_type_journal} node_data_field_journal_cover ON node.vid = node_data_field_journal_cover.vid
+  WHERE (node.type in ('journal')) AND (node.status <> 0) AND ((node_revisions.body) != ('')) AND (node_data_field_journal_cover.field_journal_cover_list <> 0)
+  ORDER BY node.created DESC LIMIT 0,1";
+  $journal = db_fetch_object(db_query($query));
+  if (is_numeric($journal->nid)) {
+    $path = "node/".$journal->nid;
+
+	drupal_goto($path);
+  }
+  else drupal_goto('jrnl/iss/archive');
+}
+
+function journal_mgt_getDetails($from, $to) {
+  $query = "SELECT n.nid as nid , n.title as title, n.created as created  FROM {node} n WHERE (n.type like 'article') AND (n.created >=".$from.") AND (n.created <".$to.") AND (n.status <> 0)";
+  $result = db_query($query);
+  $data = array();
+  $i = 0;
+ while($obj = db_fetch_object($result)) {
+	$data[$i]['title'] = $obj->title;
+	$data[$i]['created'] = $obj->created;
+	$data[$i]['link'] = "node/".$obj->nid;
+	$node = node_load($obj->nid);
+//	print "<pre>";print_r($node);print "</pre>";
+	$teaser = $node->field_teaser[0]['value'];
+	if (!empty($teaser)) {
+		$data[$i]['teaser'] = $teaser;
+	}else {
+		$data[$i]['teaser'] = $node->body;
+	}
+ $author = $node->author_profile;
+ $count = count($author);
+ $auth = "";
+ if( $count === 1) $auth = $author[0]->title;
+  elseif($count == 2) $auth = $author[0]->title. " and ".$author[1]->title;
+   elseif($count > 2) {
+     for($j = 0; $j < $count -2; $j++) {
+		$auth .= $author[$j]->title.", ";
+	 }
+	 $auth .= $author[$j]->title." and ".$author[$j + 1]->title;
+   }
+  $data[$i]['author'] = $auth;
+  $i++;
+  }
+  return $data;
+}
+
+function journal_mgt_getArticles($date) {
+  $month = date('m',$date);
+  $year = date('Y',$date);
+  $from = firstOfMonth($year, $month);
+  $to = lastOfMonth($year, $month);
+  $data = journal_mgt_getDetails($from, $to);
+  if($data) {
+   $output = "<h1 class=\"subheadline\">Articles Published During ".date('F', $date).", ".$year."</h1>";
+   $output .= "<table class='tb-archive'>";
+   foreach($data as $datum) {
+   $output .="<tr><td class='date'>".date("m/d", $datum['created'])." -</td><td class='title'> ".l(t($datum['title']), $datum['link'])." by ".t($datum['author'])."</td></tr>";
+   }
+   $output .= "</table>";
+   return $output;
+  }
+  return NULL;
+}
+
+function journal_mgt_getExcerpt($date) {
+  $month = date('m',$date);
+  $year = date('Y',$date);
+  $from = firstOfMonth($year, $month);
+  $to = lastOfMonth($year, $month);
+  $data = journal_mgt_getDetails($from, $to);
+  if ($data) {
+	$output = "<h1 class=\"subheadline\">".t("Article Excerpts")."</h2>";
+	$output .= "<ul>";
+	foreach ($data as $datum) {
+	 $teas = trim(strip_tags($datum['teaser']));
+	 $output .= "<li class=\"title\">";
+	 $output .= "<span class=\"excerpt-title\">".l(t($datum['title']), $datum['link']).t(' by ').t($datum['author'])."</span>";
+	 $teaser = _getFirstWords($teas, 30);
+	 $output .= "<div class=\"excerpt-teaser\">".$teaser."</div>";
+	 $output .= "</li>";
+	}
+	$output .= "</ul>";
+	return $output;
+  }
+return NULL;
+}
+function journal_mgt_getMeFile($f) {
+  if (is_numeric($f)) {     
+  global $base_url;
+    $filepath = db_fetch_object(db_query("SELECT filepath FROM files WHERE fid = '%s'", $f));     
+  if (is_string($filepath->filepath))       
+    return $base_url."/".$filepath->filepath;     
+  else return FALSE;   
+  } else return FALSE; 
+}
+
+/* General Function for getting next and Previous Journal Nodes */
+function node_sibling($dir = 'next', $node, $next_node_text=NULL, $prepend_text=NULL, $append_text=NULL, $tid = FALSE){
+  if($tid){
+    $query = 'SELECT n.nid, n.title FROM {node} n INNER JOIN {term_node} tn ON n.nid=tn.nid WHERE '
+           . 'n.created ' . ($dir == 'previous' ? '<' : '>') . ' %d AND n.type = "%s" AND n.status=1 '
+           . 'AND tn.tid = %d ORDER BY n.created ' . ($dir == 'previous' ? 'DESC' : 'ASC');
+    $result = db_query(db_rewrite_sql($query), $node->created, $node->type, $tid);
+  }
+  else{
+    $query = 'SELECT n.nid, n.title FROM {node} n WHERE '
+           . 'n.created ' . ($dir == 'previous' ? '<' : '>') . ' %d AND n.type = "%s" AND n.status=1 '
+           . 'ORDER BY n.created ' . ($dir == 'previous' ? 'DESC' : 'ASC');
+    $result = db_query(db_rewrite_sql($query), $node->created, $node->type);
+  }
+  if($row = db_fetch_object($result)){
+    $text = $next_node_text ? $next_node_text : $row->title;
+    return $prepend_text . l($text, 'node/'.$row->nid, array('rel' => $dir)) . $append_text;
+  }else{
+    return NULL;
+  }
+}
+function firstOfMonth($year, $month) {
+  return strtotime($month.'/01/'.$year.' 00:00:00');
+}
+function lastOfMonth($year, $month) {
+  return strtotime('-1 second',strtotime('+1 month',strtotime($month.'/01/'.$year.' 00:00:00')));
+}
+function nextMonth($year, $month) {
+  return strtotime('+1 month',strtotime($month.'/01/'.$year.' 06:00:09'));
+}
+
+
+/*nodeapi for getting author details in articles or  page */
+
+function journal_mgt_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch($op) {
+    case 'load':
+	  if ($node->type == 'article' || $node->type == 'blog') {
+/*	    if ($node->status == 0 ) {
+	    $type = node_get_types('name', $node);
+	    $msg = "This ".$type." is unpublished";
+	    drupal_set_message($msg, 'warning', false);
+	  }*/
+	    foreach ($node->field_op_author as $auth) {
+			$author_info = new StdClass();
+			$author = node_load(array('nid'=>$auth[nid]));
+			$url = $author->field_author_link[0]['url'];
+			if ($url) {
+				$attrib = array('external'=>true, 'attributes' => array('target'=>'_blank'));
+				$author_info->link = l(t("More .."), $url, $attrib);
+			}
+			$author_info->title = l($author->title, $author->path);
+			$default = (content_fields('field_author_photo', $author->type));
+			$default_image = $default['widget']['default_image']['filepath'];
+			$image_path = $author->field_author_photo[0]['filepath'] ? $author->field_author_photo[0]['filepath'] : $default_image;
+			$image = theme('imagecache', 'author_photo', $image_path);
+			$author_info->bio = $author->field_short_bio[0][value];
+			$author_info->image = l($image, "node/".$author->nid,array('html'=> TRUE));
+			
+			$node->author_profile[] = $author_info;
+		}
+		$taxo = taxonomy_node_get_terms($node);
+		$link = array();
+		foreach ($taxo as $tag) {
+		  //print "<pre>";print_r($tag); print "</pre>";
+		  $link[$tag->tid] = l($tag->name, "taxonomy/".$tag->name);
+		}
+		if( count($link) > 0 ) 	$node->taxo_terms = implode(', ', $link);
+		
+	  }
+	break;
+	case 'rss item':
+	  if ($node->type == 'article' || $node->type == 'blog') {
+		$auth = array();
+		foreach ($node->field_op_author as $a) {
+		    $author = node_load(array('nid'=>$a[nid]));
+			$auth[] = $author->title;
+		}
+		$count = count($auth);
+		if( $count === 1) $author1 = $auth[0];
+        elseif($count == 2) $author1 = $auth[0]. " and ".$auth[1];
+        elseif($count > 2) {
+          for($i = 0; $i < $count -2; $i++) {
+		    $author1 .= $auth[$i].", ";
+	      }
+	      $author1 .= $auth[$i]." and ".$auth[$i + 1];
+        }
+	    $node->name = $author1;
+	  }
+	break;
+	case 'prepare':
+	    $node->teaser = "";
+	break;
+	case 'presave':
+	  drupal_get_messages('warning');
+	  $time = SWJworkflow_timestamp($node->nid);
+	  if ($time !== false && ($node->type == 'article' || $node->type == 'blog')) {
+	    $node->created = $time;
+	  }
+	break;
+	case 'view':
+	    drupal_get_messages();
+	break;
+  }
+}
+
+function get_drupal_inst_path()
+{
+	return $_SERVER['DOCUMENT_ROOT'];
+}
+
+function recentORarchive($nid = 0) {
+  if ($nid > 0) {
+    $node = node_load($nid);
+	$created = $node->created;
+
+	$limit = time() - (30 * 24 * 60 * 60);
+	
+	if ($created > $limit) {
+	  return true;
+	}
+	else return false;
+  } else return false;
+}
+
+function jrnl_redirect() {
+  drupal_goto('jrnl/recent');
+}
+
+
+//* Implementing hook_user created as per the requirement on SWJ-241*//
+function journal_mgt_user($op, &$edit, &$account, $category = NULL) {
+                if ($op == 'view') {
+               unset($account->content['summary']);
+                }
+}
+
+
+/*
+function _test($arr) {
+print "<pre>";
+print_r($arr);
+print "</pre>";
+}*/

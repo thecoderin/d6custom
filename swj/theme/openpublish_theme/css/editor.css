@@ -1,0 +1,334 @@
+@charset "UTF-8";
+
+/* Handy font size definitions 
+font-size: .833em;   12px x .833   = 10px 
+font-size: .917em;   12px x .917   = 11px 
+font-size: 1em;      12px x 1      = 12px 
+font-size: 1.083em   12px x 1.083  = 13px 
+font-size: 1.167em;  12px x 1.167  = 14px
+font-size: 1.25em;   12px x 1.125  = 15px
+font-size: 1.417em;  12px x 1.417  = 17px
+font-size: 2em;      12px x 2    = 24px
+*/
+
+/*************** Styles for WYSIWYG editor (e.g. FCKEditor). ****************/
+body {
+  color: #333;
+/*  font: 75% Georgia, "Times New Roman", serif;*/
+  font: 14px Georgia, "Times New Roman", serif;
+  margin: 0;
+  padding: 5px;
+}
+* {
+	padding:0;
+	margin:0;
+}
+
+a {
+	color: #022444;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+
+a:focus {
+  outline: 1px dotted;
+}
+a:active, li a.active {
+    color: /*#666;*/ #666699;
+}
+
+a:hover, a:active, li a.active {
+  outline: none;
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+h1 {
+  margin: .5em 0;
+  font-family: Georgia, "Times New Roman", Times, serif; 
+  font-size: 2.5em;
+  color: #000;
+  font-weight: normal;
+  line-height: 1.2em;
+  color: #333;
+}
+
+h2 {
+  font-size: 1.417em;  
+  font-family: Georgia, "Times New Roman", Times, serif; 
+  letter-spacing: .05em;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px 0;
+  color: #000;
+  padding: 1em 0 .5em 0;
+}*/
+
+h2 a:link, h2 a:visited  { 
+}
+
+h2 a:link, h3 a:active, h3 a:visited { 
+  color: #000;
+}
+
+h2 a:hover { 
+  text-decoration: none; 
+}
+
+/*h3 {
+  font-size: 1.083em;
+  margin: 25px 0 6px 0;
+  color: #000;
+}*/
+
+p {
+  /*font-size: 1.2em;*/
+	font-size: 14px;
+    line-height: 1.333em;
+    margin-bottom: 10px;
+	margin-top:10px 
+}
+
+blockquote {
+	background: none repeat scroll 0 0 #EFEFEF;
+    border-left: 1px solid;
+    font-size: 14px;
+    margin: 10px;
+    padding: 10px;
+    position: relative
+}
+
+blockquote p{
+	/*margin-bottom: 0px;
+	padding-bottom:10px;*/
+}
+
+em {
+  padding: 0 3px 0 0;
+}
+
+/*hr {
+  background: #7f7f7f;
+  border: none;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+}*/
+
+img, a img {
+  border: none;
+  outline: none;
+}
+
+dl {
+  margin: .5em 0 1em;
+  padding: 0;
+}
+
+dl dd {
+  margin: 0 0 .5em 1.5em;
+}
+
+ol, ul {
+  margin:10px 0;
+  padding: 0;
+}
+
+
+
+input, select {margin: 5px 0;}
+
+/***override****/
+
+caption {
+caption-side:bottom;
+font-size: 12px;
+font-style: italic;
+padding: 2px 4px;
+text-align: left;
+}
+
+ol li li ,
+ol li li {
+	list-style-type: lower-latin;
+} 
+ol li li li,
+ol li li li{
+	list-style-type: lower-roman;
+} 
+ol li li li li,
+ol li li li li{
+	list-style-type: lower-alpha;
+} 
+ul li li,
+ol li li{
+	   margin-left:15px;
+}
+ul li, ol li {
+  list-style-position: outside;
+  padding: 2px 0;
+   margin-left:30px;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul{
+	margin-top:0;
+	margin-bottom:0;
+}
+li{
+	line-height: 1.33em;
+}
+
+ h1 {
+    color: #333333;
+    font-size: 27px;
+    margin-bottom: 10px;
+  /*  text-align: center;*/
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+h2 {
+    color: #333333;
+    font-size: 21px; 
+    margin-bottom: 10px;
+  /*  text-align: center;*/
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+h3 {
+    color: #333333;
+    font-size: 20px; 
+    margin-bottom: 10px;
+   /* text-align: center;*/
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+h4 {
+    color: #333333;
+    font-size: 18px; 
+    margin-bottom: 10px;
+    /*text-align: center;*/
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+h5 {
+    color: #333333;
+    font-size: 16px; 
+    margin-bottom: 8px;
+    text-align: center;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+h6 {
+    color: #333333;
+    font-size: 14px; 
+    margin-bottom: 8px;
+    text-align: center;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+.callout p{
+	font-size: 12px;
+/*	margin-bottom: 0px;
+	padding-bottom:10px;*/
+
+}
+.callout {
+font-size: 12px;
+border: 2px solid #022444;
+width: 200px;
+padding: 10px;
+margin: 10px;
+background: #ebebeb;
+float:right;
+} 
+.callout.left{
+float:left;
+}
+
+hr {
+    border: 1px solid gray;
+    height: 1px;
+    margin-bottom: 3px;
+    margin-top: -8px;
+}
+
+
+table {
+    border-collapse: collapse;
+	margin: 10px auto;
+}
+td ,th {
+    font-size: 14px;
+    padding: 5px;
+}
+
+thead th {
+	text-align:left;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+}
+
+img {
+	margin:5px;
+}
+
+h1.section-break{
+	border-bottom : 1px solid #888888;
+}
+
+h1.page-title{
+	color: #760c29;
+	text-align: center;
+}
+
+.cke_panel_listItem div {float:none;font-weight:normal;padding:0;margin:0;width:auto;}
+
+/******To hide call-out options from the styles drop-down******/
+.cke_panel_listItem .callout {display:none}
+.cke_panel_listItem a,
+.cke_panel_listItem li
+{padding:0;line-height:normal}
+.cke_panel_listItem a {border:0 none;}
+/**********/
+sup, sub {
+padding:3px;
+line-height:0;
+font-size:x-small;
+}
+sub {
+vertical-align: -2px;
+}
+sup {
+vertical-align: 2px;
+}
+
+/****table/image caption****/
+/*table.image{width:auto !important;}*/
+table.image,
+table.image td
+{border:1px dotted;padding:0 !important;font-style: italic;font-size: 12px !important;}
+table.image img{margin:0}
+
+table.caption{border:0px none; }
+table.caption tr:last-child td,
+table.caption .caption-row td
+{ border:1px dotted;border-top-style:solid;font-style: italic;text-align:left; font-size: 12px !important;}
+/************/
+
+/******P no-spacing******/
+p.no-spacing{margin:0px;}
+
+/************/
+/******TOC******/
+h3.toc-title{
+	color: #4E4E4E;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+/************/
+

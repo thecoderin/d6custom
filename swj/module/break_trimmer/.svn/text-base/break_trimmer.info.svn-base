@@ -1,0 +1,5 @@
+;$Id$
+name=Trims Extra Breaks in Content
+description=Trims Extra Breaks in Content
+core=6.x
+package=Developer Build

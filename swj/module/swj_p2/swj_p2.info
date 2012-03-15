@@ -1,0 +1,6 @@
+; $Id$//
+name = SWJ Phase 2
+description = Small changes on SWJ Phase 2 are added here
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma

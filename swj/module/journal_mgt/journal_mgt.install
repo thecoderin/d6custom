@@ -1,0 +1,17 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+  
+function journal_mgt_install() {			
+	$values = array('timestamp'=>0, 'per_cron'=>12);	
+	$variable = serialize(array($values));
+	variable_set('journal_mgt_setting',$variable);	
+}
+
+function member_registration_uninstall() {
+  variable_del('journal_mgt_setting');
+}
+?>

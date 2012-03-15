@@ -1,0 +1,97 @@
+<?php
+
+function lib_tags_menu() {
+  $items['lib/tags4'] = array(
+    'title' => null,
+    'description' => 'Tag Index Page',
+    'page callback' => 'lib_tags_tid',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/tags'] = array(
+    'title' => null,
+    'description' => 'Tag Index - Alpha',
+    'page callback' => 'lib_tags_alpha',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/tags2'] = array(
+    'title' => null,
+    'description' => 'Tag Index - Tagged',
+    'page callback' => 'lib_tags_most',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/tags3'] = array(
+    'title' => null,
+    'description' => 'Tag Index - Recent',
+    'page callback' => 'lib_tags_recent',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function lib_nodes() {
+  $sql = db_query("SELECT DISTINCT(node.nid) as nid FROM {node} node WHERE node.type in('lib_guides', 'lib_readlist', 'lib_report_art', 'lib_book') AND node.status<>0 ORDER BY node.created DESC");
+  $tags = array();
+  while($row = db_fetch_object($sql)) {
+   lib_tags_fetch($tags, $row->nid);
+  }
+  return $tags;
+}
+
+function lib_tags_fetch(&$tags=array(), $nid) {
+ $n = node_load($nid);
+  $terms = $n->taxonomy;
+  foreach ($terms as $t) {
+    if (array_key_exists($t->tid, $tags)) {
+      $tags[$t->tid]['count']++;
+      if ($n->created > $tags[$t->tid]['created']) $tags[$t->tid]['created'] = $n->created;
+    }
+    else {
+      $tags[$t->tid] = array('count'=>1, 'name'=>$t->name, 'tid'=>$t->tid, 'created'=> $n->created);
+    }
+  }
+ unset($n);
+}
+
+function lib_tags_tid() {
+  $links = "<i><b>Tags</b></i> | ".l(t('Alphabetical'), "lib/tags2")." | ".l(t('Most Tagged'), "lib/tags3")." | ".l(t('Most Recent'), "lib/tags4");
+  $tags = lib_nodes();
+  swj_p2_aasort($tags, 'tid');
+  return theme('tags', $tags, $links);
+}
+
+function lib_tags_alpha() {
+  $links = " <i><b>Alphabetical</b></i> | ".l(t('Most Tagged'), "lib/tags2")." | ".l(t('Most Recent'), "lib/tags3");
+  $tags = lib_nodes();
+  swj_p2_aasort($tags, 'name');
+  $ret = array_reverse($tags, true);
+//  p2_test($ret);
+  return theme('tags', $ret, $links);
+}
+
+function lib_tags_most() {
+  $links = l(t('Alphabetical'), "lib/tags")." | <i><b>Most Tagged</b></i> | ".l(t('Most Recent'), "lib/tags3");
+  $tags = lib_nodes();
+  swj_p2_aasort($tags, 'count');
+  return theme('tags', $tags, $links);
+}
+
+function lib_tags_recent() {
+  $links = l(t('Alphabetical'), "lib/tags")." | ".l(t('Most Tagged'), "lib/tags2")." | <i><b>Most Recent</b></i>";
+  $tags = lib_nodes();
+  swj_p2_aasort($tags, 'created');
+  return theme('tags', $tags, $links);
+}
+
+function lib_tags_theme() {
+  return array(
+    'tags' =>array(
+      'template' => 'tag-index',
+      'arguments' => array('tags'=>NULL, 'links'=>NULL),
+     ),
+  );
+}

@@ -1,0 +1,69 @@
+<?php
+/**
+* @file
+* Remove Duplicate Nodes.
+*/
+
+/**
+* Implementation of hook_menu().
+*/
+function deldupe_menu() {
+    $items['admin/content/deldupe'] = array(
+        'title' => 'Delete Duplicates',
+        'description' => 'Delete Duplicate Nodes',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('deldupe_content_command'),
+        'access arguments' => array('administer site configuration'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    return $items;
+}
+/**
+* Build Form
+*/
+function deldupe_content_command() {
+    $options = node_get_types('names');
+    $form['deldupe_node_types'] = array(
+        '#type' => 'select',
+        '#title' => t('You can select content type from which duplicates are removed.'),
+        '#options' => $options,
+        '#default_value' => variable_get('deldupe_node_types', array('news_category')),
+        '#description' => t('Duplicate content from the selected content types will be deleted.'),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Delete Duplicates'),
+    );
+    return $form;
+}
+/**
+* Call delete function and set message.
+*/
+function deldupe_content_command_submit($form, $form_state) {
+    $type= $form_state['values']['deldupe_node_types'];
+    $deldupe_m = 'Duplicates deleted from content type '. $type;
+    deldupe_delete($type);
+    drupal_set_message(check_plain(t($deldupe_m)));
+}
+/**
+* Delete duplicates from selected content type, based on title. By Robert Douglass.
+* @see <a href="http://robshouse.net/blog-post/remove-duplicate-nodes-deldupe-based-title
+" title="http://robshouse.net/blog-post/remove-duplicate-nodes-deldupe-based-title
+" rel="nofollow">http://robshouse.net/blog-post/remove-duplicate-nodes-deldupe-based-title
+</a> */
+function deldupe_delete($type) {
+    $previous = array();
+    $result = db_query("SELECT nid, title FROM {node}
+    WHERE title IN
+      (SELECT title FROM {node}
+        WHERE type = '%s'
+        GROUP BY title HAVING count(*) > 1)
+    ORDER BY title, nid DESC", $type);
+    while ($row = db_fetch_array($result)) {
+        if ($row['title'] == $previous['title']) {
+            node_delete($previous['nid']);
+        }
+        $previous = $row;
+    }
+}
+?>

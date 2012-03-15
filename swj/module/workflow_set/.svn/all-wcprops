@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/workflow_set
+END
+workflow_set.info
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/workflow_set/workflow_set.info
+END
+workflow_set.module
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/workflow_set/workflow_set.module
+END
+workflow_set.install
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/workflow_set/workflow_set.install
+END

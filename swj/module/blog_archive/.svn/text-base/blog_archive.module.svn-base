@@ -1,0 +1,257 @@
+<?php
+
+function blog_archive_menu() {
+/*  $items['blog/archives'] = array(
+    'title' => 'Blog Archive',
+	'description' => 'Blog Archives',
+	'page callback' => 'blog_archive_list',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );*/
+  $items['blog/archive'] =array(
+    'title' => '',
+//	'title callback' => 'blog_archive_title',
+	'description' => 'Blog Archive of the Month',
+	'access arguments' => array('access content'),
+	'page callback' => 'blog_archive_getBlog',
+	'type' => MENU_CALLBACK,
+  );
+  
+    $items['blog'] = array(
+    'title' => t('Recent Articles'),
+	'description' => 'Journal Articles',
+	'page callback' => 'blog_redirect',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );
+  
+  $items['blog/latest'] = array(
+	'title' => '',
+	'description' => 'Blog Archives',
+	'page callback' => 'blog_archive_getLatest',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function blog_archive_list() {
+    return drupal_get_form('blog_archive_form');
+}
+
+function blog_archive_form() {
+  $form = array();
+  $form['archive_select'] =  array(
+						  '#type' => 'select',
+						  '#options' => blog_archive_getList(),
+						);
+  $form['archive_button'] = array(
+						  '#type' => 'submit',
+						  '#name' => 'edit-go',
+						  '#id' => 'edit-go',
+						  '#value' => t('Go'),
+						  '#submit' =>array('blog_archive_go'),
+						);
+  
+  
+  return $form;
+}
+
+function blog_archive_getList() {
+ $query = "SELECT DATE_FORMAT(FROM_UNIXTIME(node.created), '%Y%m') AS created_year_month,
+			COUNT(DISTINCT(node.nid)) AS num_records
+			FROM {node} node 
+			LEFT JOIN {content_field_op_author node_data_field_op_author} ON node.vid = node_data_field_op_author.vid
+			LEFT JOIN {node node_node_data_field_op_author} ON node_data_field_op_author.field_op_author_nid = node_node_data_field_op_author.nid
+			WHERE (node.status <> 0) AND (node.type in ('blog'))
+			GROUP BY created_year_month
+			ORDER BY created_year_month DESC";
+ $result = db_query($query);
+ 
+ $arr = array();
+ while ($row = db_fetch_object($result)) {
+	$link = "blog/archive/".$row->created_year_month;
+	$created = substr($row->created_year_month, 0, 4). "-" .substr($row->created_year_month,4,6);
+	$time = date('F, Y', strtotime($created)); 
+	$arr[$link] = $time."(".$row->num_records.")";
+ }
+  return $arr;
+}
+
+function blog_archive_getLatest() {
+  $query = "SELECT DATE_FORMAT(FROM_UNIXTIME(node.created), '%Y%m') AS created_year_month
+			FROM {node} node 
+			LEFT JOIN {content_field_op_author node_data_field_op_author} ON node.vid = node_data_field_op_author.vid
+			LEFT JOIN {node node_node_data_field_op_author} ON node_data_field_op_author.field_op_author_nid = node_node_data_field_op_author.nid
+			WHERE (node.status <> 0) AND (node.type in ('blog'))
+			GROUP BY created_year_month
+			ORDER BY created_year_month DESC LIMIT 0,1";
+  $res = db_fetch_object(db_query($query));
+  drupal_goto("blog/archive/".$res->created_year_month);
+}
+
+function blog_archive_go($form, &$form_state) {
+  drupal_goto($form_state['values']['archive_select']);
+}
+
+function blog_archive_getBlog() {
+  $output = new StdClass();
+  $yearMonth = arg(2);
+  if(empty($yearMonth)) drupal_goto('blog/latest');
+  $year_month = substr($yearMonth, 0, 4)."-".substr($yearMonth, 4);
+  $year = substr($yearMonth, 0, 4);
+  $month = substr($yearMonth, 4);
+  $first = firstOfMonth($year, $month);
+  $last = lastOfMonth($year, $month);
+  $output->title = date('F, Y', strtotime($year_month));
+  $output->blogs = blog_archive_details($first, $last);
+  $output->excerpt = blog_archive_excerpt($first, $last);
+  $output->prev = blog_archive_sibling('previous', $year, $month);
+  $output->next = blog_archive_sibling('next', $year, $month);
+  return theme('blog_archive', $output);
+}
+
+function blog_archive_theme() {
+  return array(
+	'blog_archive' => array(
+	'template' => 'blog-archive',
+	'arguments' => array('output'=> NULL),
+	),
+	'blog_archive_block' => array(
+	  'template' => 'blog-archive-block',
+	  'arguments' => array('form' => NULL),
+	),
+  );
+}
+function blog_archive_title() {
+  $yearMonth = arg(2);
+  $year_month = substr($yearMonth, 0, 4)."-".substr($yearMonth, 4);
+  return date('F, Y', strtotime($year_month));
+}
+function blog_archive_getDetails($from, $to) {
+  $query = "SELECT n.nid as nid , n.title as title, n.created as created FROM {node} n WHERE (n.type like 'blog') AND (n.created >=".$from.") AND (n.created <".$to.") AND (n.status <> 0)";
+  $result = db_query($query);
+  $data = array();
+  $i = 0;
+  while($obj = db_fetch_object($result)) {
+	$data[$i]['title'] = $obj->title;
+	$data[$i]['created'] = $obj->created;
+	$data[$i]['link'] = "node/".$obj->nid;
+	$node = node_load($obj->nid);
+//	print "<pre>";print_r($node);print "</pre>";
+	$teaser = $node->field_teaser[0]['value'];
+	if (!empty($teaser)) {
+		$data[$i]['teaser'] = $teaser;
+	}else {
+		$data[$i]['teaser'] = $node->body;
+	}
+ $author = $node->author_profile;
+ $count = count($author);
+ $auth = "";
+ if( $count === 1) $auth = $author[0]->title;
+ elseif($count == 2) $auth = $author[0]->title. " and ".$author[1]->title;
+ elseif($count > 2) {
+   for($j = 0; $j < $count -2; $j++) {
+		$auth .= $author[$j]->title.", ";
+	}
+	$auth .= $author[$j]->title." and ".$author[$j + 1]->title;
+ }
+ $data[$i]['author'] = $auth;
+ $i++;
+ }
+  return $data;
+}
+
+function blog_archive_details($from, $to) {
+  $data = blog_archive_getDetails($from, $to);
+  if($data) {
+//   $output = "<h1 class=\"subheadline\">Blogs Published During ".date('F', $from).", ".date('Y', $from)."</h1>";
+   $output = "<table class='tb-archive'>";
+   foreach($data as $datum) {
+    $output .="<tr><td class='date'>".date("m/d", $datum['created'])." -</td><td class='title'> ".l($datum['title'], $datum['link'])." by ".t($datum['author'])."</td></tr>";
+   }
+   $output .= "</table>";
+   return $output;
+  }
+  return NULL;
+}
+function blog_archive_excerpt($from, $to) {
+  $data = blog_archive_getDetails($from, $to);
+  if ($data) {
+	$output = "<h1 class=\"subheadline\">".t("Post Titles & Excerpts")."</h2>";
+	$output .= "<ul>";
+	foreach ($data as $datum) {
+	 $teas = trim(strip_tags($datum['teaser']));
+	 $output .= "<li class=\"title\">";
+	 $output .= "<span class=\"excerpt-title\">".l(t($datum['title']), $datum['link']).t(' by ').t($datum['author'])."</span>";
+	 $teaser = _getFirstWords($teas, 30);
+	 $output .= "<div class=\"excerpt-teaser\">".$teaser."</div>";
+	 $output .= "</li>";
+	}
+	$output .= "</ul>";
+	return $output;
+  }
+return NULL;
+}
+
+/**
+* Implementation of hook_block().
+*/
+function blog_archive_block($op = 'list', $delta = 0) {
+  $block = array();
+  switch ($op) {
+    case 'list':
+	  $block[0]['info'] = t('Blog Archives');
+    break;
+    case 'view':
+      switch ($delta) {
+	    case 0:
+		  $block['content'] = blog_archive_getBlock();
+		break;
+	  }
+  }
+  return $block;
+}
+
+function blog_archive_getBlock() {
+  return theme('blog_archive_block', blog_archive_list());
+}
+
+function blog_archive_sibling($direction = 'next', $year, $month) {
+  $ym = $year.''.$month;
+  $query = "SELECT DATE_FORMAT(FROM_UNIXTIME(node.created), '%Y%m') AS created_year_month
+			FROM {node} node 
+			LEFT JOIN {content_field_op_author node_data_field_op_author} ON node.vid = node_data_field_op_author.vid
+			LEFT JOIN {node node_node_data_field_op_author} ON node_data_field_op_author.field_op_author_nid = node_node_data_field_op_author.nid
+			WHERE (node.status <> 0) AND (node.type in ('blog')) AND 
+			DATE_FORMAT(FROM_UNIXTIME(node.created), '%Y%m')  ". ($direction == 'previous' ? '< ' : '> ') .$ym. " GROUP BY created_year_month
+			ORDER BY created_year_month ". ($direction == 'previous' ? 'DESC' : 'ASC');
+//print $query; exit;
+  $result = db_query($query);
+  if ($row = db_fetch_object($result)){
+
+	$link = "blog/archive/".$row->created_year_month;
+    if ($direction == 'next') {
+		$output = l(t("next>>"), $link);
+	}
+	else {
+		$output = l(t("<<previous"), $link);
+	}
+	return $output;
+  }
+  return false;
+}
+
+function blog_archive_form_alter(&$form, &$form_state, $form_id) {
+  
+  if ($form_id == 'user_register') {
+	//print "<pre>";print_r($form); print "</pre>";exit;
+	$form_reg = $form['account'];
+	}
+}
+
+function blog_redirect() {
+  drupal_goto('blog/recent');
+}
+
+

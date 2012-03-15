@@ -1,0 +1,15 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+ 
+ function vb2dr_install() {
+    $values = array('last_user'=>0, 'updated'=>0);	
+	$variable = serialize($values);
+	variable_set('vb2dr',$variable);	
+ }
+ 
+ function vb2dr_uninstall() {
+   variable_del('vb2dr');
+ }

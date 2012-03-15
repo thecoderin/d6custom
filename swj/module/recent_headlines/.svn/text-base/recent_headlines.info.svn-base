@@ -1,0 +1,9 @@
+;$Id$
+name=Recent Headlines for All Categories Page
+description=Module to display Recent Headlines for All Categories Page
+core=6.x
+php=4.3.3
+package = "Developer Build"
+version=6.x-1.0-beta
+ 
+ 

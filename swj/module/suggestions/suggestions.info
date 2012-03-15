@@ -1,0 +1,7 @@
+; $Id$//
+name = SmallWars Suggestion Forms
+description = Managing Smallwars User Suggestions
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma
+ependencies[] = webform

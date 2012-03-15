@@ -1,0 +1,167 @@
+<?php
+
+/**
+* Implementation of hook_block().
+*/
+function swj_p2_block($op = 'list', $delta = 0) {
+ $blocks = array();
+ switch ($op) {
+   case 'list':
+    $blocks[0]['info'] = t('Related News');
+   break;
+   case 'view':
+     switch ($delta) {
+	   case 0:
+	    $blocks['content'] = swj_p2_related_news();
+	  break;
+	 }
+ }
+ return $blocks;
+}
+
+function swj_p2_getTags($node, &$result) {
+  if (!is_array($result)) {
+    $result = array();
+  }
+  $taxonomy = $node->taxonomy;
+  foreach ($taxonomy as $term) {
+    $result[] = $term;
+  }
+  
+}
+
+function swj_p2_related_news() {
+  $node = node_load(arg(1));
+  $categories = $node->field_news_categories;
+  $tags = array();
+  foreach ($categories as $category) {
+    $nid[] = $category['nid'];
+  }
+  unset($node);
+  $nodes = implode(',', $nid); 
+  $sql = db_query("SELECT DISTINCT(node.nid) AS nid,
+	node.title AS title
+	FROM {node} node
+	INNER JOIN {content_field_news_categories news_category} ON news_category.nid=node.nid
+	WHERE news_category.field_news_categories_nid in (%s) AND node.type in ('news') AND node.nid <> %d AND node.status<>0 ORDER BY node.created DESC LIMIT 0,5", $nodes, arg(1));
+  $data = array();
+  $i =0;
+  while ($row = db_fetch_object($sql)) {
+  	$news = node_load($row->nid);
+  	$url = $news->field_news_url[0]['url'];
+  	$attributes = array('external' => true,'attributes' => array('class' => 'news-external'));
+ 	$data[$i]['link'] = l($news->title, $url, $attributes);
+ 	$data[$i]['author'] = t($news->field_news_author[0]['value']);
+ 	$data[$i]['source'] = t($news->field_news_source[0]['value']);
+ 	$data[$i]['ed_cmt'] = ($news->field_news_ed_comment[0]['value']!='') ? 
+				l(' ',"node/".$row->nid, array( 'attributes' => array('class'=>'lk-ed-cmt'))) : '';
+ 	if ($news->comment_count > 0) {
+ 	  $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid, array( 'fragment'=>'comments') );
+ 	}
+ 	else {
+ 	  $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid);
+ 	}
+ 	$i++;
+  }
+  return theme('related_news', $data);
+ 
+}
+
+function swj_p2_theme() {
+	return array(
+	  'related_news' => array(
+	    'template' => 'related-news-block',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	);
+}
+
+function swj_p2_category_list($node) {
+  if(is_numeric($node->nid) && ($node->field_cat_active[0]['value'] != 0)) {
+     $limit = $node->field_cat_num_news[0]['value'];
+     $sql = db_query("SELECT DISTINCT(node.nid) as nid
+		  FROM {node} node
+		  INNER JOIN {content_field_news_categories} news_cat ON news_cat.nid = node.nid
+		  WHERE (node.status <> 0) AND (node.type in ('news')) AND (news_cat.field_news_categories_nid = %d)
+		  ORDER BY node.created DESC LIMIT 0, %d", $node->nid, $limit);
+     $data = array();
+     $i = 0;
+     while($row = db_fetch_object($sql)) {
+         $news = node_load($row->nid);
+
+  	 $url = $news->field_news_url[0]['url'];
+   	 $attributes = array('external' => true,'attributes' => array('class' => 'news-external'));
+
+         $data[$i]['title'] = l($news->title, $url, $attributes);
+ 	if ($news->comment_count > 0) {
+	   $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid, array( 'fragment'=>'comments') );
+         }else {
+           $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid);
+         }
+ 	 $data[$i]['author'] = t($news->field_news_author[0]['value']);
+         $data[$i]['source'] = t($news->field_news_source[0]['value']);
+ 	 $data[$i]['ed_cmt'] = ($news->field_news_ed_comment[0]['value']!='') ? l(' ',"node/".$row->nid, array( 'attributes' => array('class'=>'lk-ed-cmt'))) : '';
+         $i++;
+     }
+   return $data;
+  }
+  return false;
+}
+/*Function for testing the output
+	Done By: Anish Karim C
+*/
+function p2_test($arr) {
+  print "<pre>";print_r($arr);print "</pre>";
+}
+/*  Function for sorting an array by key
+    Using for Category Sort to make it simple and easy
+	Done By: Anish Karim C
+	Ref: http://is.gd/MfljtT
+	@params: array to be sorted and the key needed to sort
+	Order: Descending order
+    Pass by reference
+*/
+function swj_p2_aasort (&$array, $key) {
+    $sorter=array();
+    $ret=array();
+    reset($array);
+    foreach ($array as $ii => $va) {
+        $sorter[$ii]=$va[$key];
+    }
+    asort($sorter);
+    foreach ($sorter as $ii => $va) {
+        $ret[$ii]=$array[$ii];
+    }
+    $array=array_reverse($ret, true);
+}
+/*  Function for removing duplicates from a multi-dimension array
+	Done By: Anish Karim C
+	@params: array - To check and remove duplicates
+                 preserveKeys - default false, if true preserve array keys
+    Output array
+*/
+
+function swj_p2_arrayUnique($array, $preserveKeys = false)
+{
+    // Unique Array for return
+    $arrayRewrite = array();
+    // Array with the md5 hashes
+    $arrayHashes = array();
+    foreach($array as $key => $item) {
+        // Serialize the current element and create a md5 hash
+        $hash = md5(serialize($item));
+        // If the md5 didn't come up yet, add the element to
+        // to arrayRewrite, otherwise drop it
+        if (!isset($arrayHashes[$hash])) {
+            // Save the current element hash
+            $arrayHashes[$hash] = $hash;
+            // Add element to the unique Array
+            if ($preserveKeys) {
+                $arrayRewrite[$key] = $item;
+            } else {
+                $arrayRewrite[] = $item;
+            }
+        }
+    }
+    return $arrayRewrite;
+}

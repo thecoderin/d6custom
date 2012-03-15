@@ -1,0 +1,881 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/9586/SWJ/trunk/sites/all/themes/smallwars_theme/views
+END
+views-view-unformatted--aggregator--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--aggregator--block-1.tpl.php
+END
+views-view-row-rss--feeds--feed-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-row-rss--feeds--feed-1.tpl.php
+END
+views-view-field--blogs--block-2--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--field-op-author-nid.tpl.php
+END
+views-view-unformatted--elcentro-eng-main--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--elcentro-eng-main--page-1.tpl.php
+END
+views-view-row-rss--homepage-articles--feed-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-row-rss--homepage-articles--feed-1.tpl.php
+END
+views-view-field--most-viewed-blogs--block--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--most-viewed-blogs--block--field-op-author-nid.tpl.php
+END
+views-view-unformatted--homepage-articles--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--homepage-articles--block-2.tpl.php
+END
+views-view-field--blogs-author--block-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--field-teaser-value.tpl.php
+END
+views-view-field--article-author--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--article-author--block-1--field-op-author-nid.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--field-op-author-nid.tpl.php
+END
+views-view-unformatted--elcentro-eng-main--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--elcentro-eng-main--block-2.tpl.php
+END
+views-view-unformatted--authors--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--authors--page-1.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--field-teaser-value.tpl.php
+END
+views-view-field--blogs-archive--page--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-archive--page--comment-count.tpl.php
+END
+views-view-unformatted--blogs-archive--page.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--blogs-archive--page.tpl.php
+END
+views-view-unformatted--journal-archive--page.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--journal-archive--page.tpl.php
+END
+views-view-field--content-by-topic--page-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-topic--page-1--comment-count.tpl.php
+END
+views-view-field--most-popular-category-page--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/!svn/ver/8962/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--most-popular-category-page--block-1--title.tpl.php
+END
+views-view-unformatted--content-by-topic--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--content-by-topic--page-1.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--field-op-author-nid.tpl.php
+END
+views-view-list--most-commented-articles--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--most-commented-articles--block-1.tpl.php
+END
+views-view-table--posts-by-user--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-table--posts-by-user--block-1.tpl.php
+END
+views-view-list--most-viewed-blogs--block.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--most-viewed-blogs--block.tpl.php
+END
+views-view-field--Recent-Related-SWJ-Content--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/!svn/ver/8943/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--Recent-Related-SWJ-Content--block-1--title.tpl.php
+END
+views-view-field--intro-quotes--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--intro-quotes--block-1--title.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--comment-count.tpl.php
+END
+views-view-field--latest-issues--block-1--field-journal-issue-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--latest-issues--block-1--field-journal-issue-value.tpl.php
+END
+views-view-field--homepage-articles--block-2--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--field-op-author-nid.tpl.php
+END
+views-view-unformatted--blogs--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--blogs--block-2.tpl.php
+END
+views-view-unformatted--intro-quotes--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--intro-quotes--block-1.tpl.php
+END
+views-view-unformatted--content-by-term--page-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--content-by-term--page-2.tpl.php
+END
+views-view-field--blogs--page-1--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--title-1.tpl.php
+END
+views-view-field--homepage-articles--block-2--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--phpcode.tpl.php
+END
+views-view-unformatted--elcentro-esp-main--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--elcentro-esp-main--block-2.tpl.php
+END
+views-view-field--most-viewed-articles--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--most-viewed-articles--block-1--field-op-author-nid.tpl.php
+END
+views-view-field--forntpage-footer--block-1--body.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--forntpage-footer--block-1--body.tpl.php
+END
+views-view-field--content-by-term--page-2--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-term--page-2--field-op-author-nid.tpl.php
+END
+views-view-field--blog-author-blurb--block-1--body.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blog-author-blurb--block-1--body.tpl.php
+END
+views-view-field--journal-articles--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--journal-articles--block-1--field-op-author-nid.tpl.php
+END
+views-view-unformatted--journal-archive--block.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--journal-archive--block.tpl.php
+END
+views-view-field--content-by-topic--page-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-topic--page-1--field-op-author-nid.tpl.php
+END
+views-view-field--blogs-archive--page--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-archive--page--title.tpl.php
+END
+views-view-list--journal-current-issue-sub-view--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--journal-current-issue-sub-view--block-1.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--comment-count.tpl.php
+END
+views-view-field--content-by-term--page-2--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-term--page-2--phpcode.tpl.php
+END
+views-view-field--homepage-articles--page-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--phpcode.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--field-op-author-nid.tpl.php
+END
+views-view-field--most-popular-category-page--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/svn/!svn/ver/8962/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--most-popular-category-page--block-1--field-op-author-nid.tpl.php
+END
+views-view-field--content-by-topic--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-topic--page-1--title.tpl.php
+END
+views-view-field--content-by-topic--page-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-topic--page-1--phpcode.tpl.php
+END
+views-view-field--homepage-articles--page-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--comment-count.tpl.php
+END
+views-view-unformatted--homepage-articles--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--homepage-articles--page-1.tpl.php
+END
+views-view-field--blogs--page-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--field-teaser-value.tpl.php
+END
+views-view-field--article-author--block-1--teaser.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--article-author--block-1--teaser.tpl.php
+END
+views-view-list--swj-blog-posts--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--swj-blog-posts--block-1.tpl.php
+END
+views-view-field--homepage-articles--block-2--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--field-teaser-value.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--phpcode.tpl.php
+END
+views-view-field--current-issue--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--title.tpl.php
+END
+views-view-unformatted--article-author--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--article-author--block-1.tpl.php
+END
+views-view-field--blogs-author--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--field-op-author-nid.tpl.php
+END
+views-view--content-by-term--page-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view--content-by-term--page-2.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--field-teaser-value.tpl.php
+END
+views-view-unformatted--comments-blog-comments--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--comments-blog-comments--block-1.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--title.tpl.php
+END
+views-view-field--current-issue--page-1--view-node.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--view-node.tpl.php
+END
+views-view-field--content-by-term--page-2--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-term--page-2--field-teaser-value.tpl.php
+END
+views-view-field--blogs-author--block-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--phpcode.tpl.php
+END
+views-view-unformatted--most-popular--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--most-popular--block-1.tpl.php
+END
+views-view-unformatted--elcentro-esp-main--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--elcentro-esp-main--page-1.tpl.php
+END
+views-view-field--current-issue--page-1--field-journal-blogs-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--field-journal-blogs-nid.tpl.php
+END
+views-view-field--all-categories-news-comments--block-1--name.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/8938/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--all-categories-news-comments--block-1--name.tpl.php
+END
+views-view-field--homepage-articles--block-2--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--title-1.tpl.php
+END
+views-view-field--current-issue--page-1--field-journal-desc-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--field-journal-desc-value.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--field-op-author-nid.tpl.php
+END
+views-view-unformatted--cat-news--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/8889/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--cat-news--block-1.tpl.php
+END
+views-view-unformatted--all-categories-news-comments--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/8938/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--all-categories-news-comments--block-1.tpl.php
+END
+views-view-field--homepage-articles--block-2--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--comment-count.tpl.php
+END
+views-view--content-by-topic--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view--content-by-topic--page-1.tpl.php
+END
+views-view-unformatted--current-issue--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--current-issue--page-1.tpl.php
+END
+views-view-field--blogs--block-2--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--field-teaser-value.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--title.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--phpcode.tpl.php
+END
+views-view-field--blogs--block-2--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--phpcode.tpl.php
+END
+views-view-field--homepage-articles--page-1--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--title-1.tpl.php
+END
+views-view-field--blogs-archive--page--teaser.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-archive--page--teaser.tpl.php
+END
+views-view-field--homepage-articles--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--title.tpl.php
+END
+views-view-row-rss--blogs--feed-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-row-rss--blogs--feed-1.tpl.php
+END
+views-view-row-rss--swj-kindle--feed-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-row-rss--swj-kindle--feed-1.tpl.php
+END
+views-view-unformatted--latest-issues--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--latest-issues--block-1.tpl.php
+END
+views-view-field--blogs--block-2--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--comment-count.tpl.php
+END
+views-view-fields--most-popular-category-page--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/8894/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-fields--most-popular-category-page--block-1.tpl.php
+END
+views-view-unformatted--blogs-author--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--blogs-author--block-1.tpl.php
+END
+views-view-field--current-issue--page-1--field-journal-cover-fid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--field-journal-cover-fid.tpl.php
+END
+views-view-field--content-by-term--page-2--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-term--page-2--comment-count.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--title-1.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--phpcode.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--comment-count.tpl.php
+END
+views-view-field--article-author--block-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--article-author--block-1--comment-count.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--comment-count.tpl.php
+END
+views-view-fields--Recent-Related-SWJ-Content--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/8943/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-fields--Recent-Related-SWJ-Content--block-1.tpl.php
+END
+views-view-unformatted--most-popular-category-page--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8894/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--most-popular-category-page--block-1.tpl.php
+END
+views-view-list--most-viewed-articles--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--most-viewed-articles--block-1.tpl.php
+END
+views-view-field--current-issue--page-1--field-journal-issue-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--field-journal-issue-value.tpl.php
+END
+views-view-list--most-viewed-articles--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--most-viewed-articles--block-2.tpl.php
+END
+views-view-unformatted--Valut--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--Valut--block-1.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--phpcode.tpl.php
+END
+views-view-field--content-by-topic--page-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-topic--page-1--field-teaser-value.tpl.php
+END
+views-view-field--blogs-author--block-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--comment-count.tpl.php
+END
+views-view-list--recent-comments-article--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--recent-comments-article--block-1.tpl.php
+END
+views-view-unformatted--Recent-Related-SWJ-Content--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/8943/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--Recent-Related-SWJ-Content--block-1.tpl.php
+END
+views-view-fields--see-also-news-category--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/9586/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-fields--see-also-news-category--block-1.tpl.php
+END
+views-view-field--homepage-articles--block-2--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--block-2--title.tpl.php
+END
+views-view-field--blogs--page-1--comment-count.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--comment-count.tpl.php
+END
+views-view-field--homepage-articles--page-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--field-op-author-nid.tpl.php
+END
+views-view-field--elcentro-esp-main--page-1--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--page-1--title-1.tpl.php
+END
+views-view-field--blogs--block-2--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--title-1.tpl.php
+END
+views-view-field--blogs--block-2--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--block-2--title.tpl.php
+END
+views-view-field--blogs-archive--page--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-archive--page--title-1.tpl.php
+END
+views-view-field--blogs-author--block-1--teaser.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--teaser.tpl.php
+END
+views-view-field--homepage-articles--page-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--homepage-articles--page-1--field-teaser-value.tpl.php
+END
+views-view-field--content-by-term--page-2--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--content-by-term--page-2--title.tpl.php
+END
+views-view-field--journal-articles--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--journal-articles--block-1--title.tpl.php
+END
+views-view-field--swj-blog-posts--block-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--swj-blog-posts--block-1--field-op-author-nid.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--title-1.tpl.php
+END
+views-view-field--article-author--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--article-author--block-1--title.tpl.php
+END
+views-view-field--elcentro-esp-main--block-2--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-esp-main--block-2--title.tpl.php
+END
+views-view-field--intro-quotes--block-1--body.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--intro-quotes--block-1--body.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--title.tpl.php
+END
+views-view-field--journal-articles--block-1--view-node.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--journal-articles--block-1--view-node.tpl.php
+END
+views-view-unformatted--blogs--page-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--blogs--page-1.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--field-teaser-value.tpl.php
+END
+views-view-field--article-author-blurb--block-1--body.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--article-author-blurb--block-1--body.tpl.php
+END
+views-view-field--elcentro-eng-main--block-2--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--block-2--title-1.tpl.php
+END
+views-view-field--blogs-author--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs-author--block-1--title.tpl.php
+END
+views-view-fields--cat-news--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/8825/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-fields--cat-news--block-1.tpl.php
+END
+views-view-field--blogs--page-1--field-op-author-nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--field-op-author-nid.tpl.php
+END
+views-view-fields--all-categories-news-comments--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/!svn/ver/8938/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-fields--all-categories-news-comments--block-1.tpl.php
+END
+views-view-field--cat-news--block-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/8940/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--cat-news--block-1--title.tpl.php
+END
+views-view-field--elcentro-eng-main--page-1--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--elcentro-eng-main--page-1--field-teaser-value.tpl.php
+END
+views-view-field--current-issue--page-1--nid.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--current-issue--page-1--nid.tpl.php
+END
+views-view-field--authors--page-1--body.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--authors--page-1--body.tpl.php
+END
+views-view-list--comments-blog-comments--block.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-list--comments-blog-comments--block.tpl.php
+END
+views-view-field--authors--page-1--field-short-bio-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--authors--page-1--field-short-bio-value.tpl.php
+END
+views-view-unformatted--journal-articles--block-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-unformatted--journal-articles--block-1.tpl.php
+END
+views-view-field--blogs--page-1--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--title.tpl.php
+END
+views-view-field--blogs--page-1--phpcode.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/smallwars_theme/views/views-view-field--blogs--page-1--phpcode.tpl.php
+END

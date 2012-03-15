@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles
+END
+views-view--articles--page.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view--articles--page.tpl.php
+END
+views-view-field--articles--field-teaser-value.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view-field--articles--field-teaser-value.tpl.php
+END
+views-view-unformatted--articles--block-2.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view-unformatted--articles--block-2.tpl.php
+END
+views-view-field--articles--title-1.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view-field--articles--title-1.tpl.php
+END
+views-view-field--articles--title.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view-field--articles--title.tpl.php
+END
+views-view-field--articles--created.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/themes/openpublish_theme/views/articles/views-view-field--articles--created.tpl.php
+END

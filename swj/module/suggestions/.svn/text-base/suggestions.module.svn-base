@@ -1,0 +1,200 @@
+<?php
+ function suggestions_menu(){
+    $item['suggest/news'] = array(
+        'title' => t('Suggestion for News Item'),
+        'description' => 'Suggestion form for News Items',
+        'page callback' => 'suggestions_news',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+    );
+    $item['suggest/lib'] = array(
+        'title' => t('Suggestion for library Item'),
+        'description' => 'Suggestion form for Librabry Items',
+        'page callback' => 'suggestions_lib',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+    );
+    $item['admin/settings/suggestions'] = array(
+        'title' => t('Suggestions Form Settings'),
+        'description' => 'Suggestions form Settings',
+        'page callback' => 'suggestions_settings',
+        'access arguments' => array('administer nodes'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    return $item;
+ }
+ 
+ function suggestions_init() {
+   drupal_add_css(drupal_get_path('module', 'suggestions').'/style.css');
+   
+ }
+ function suggestions_block($op = 'list', $delta = 0) {
+ $blocks = array();
+ switch ($op) {
+   case 'list':
+    $blocks[0]['info'] = t('Suggest News Block');
+   break;
+   case 'view':
+     switch ($delta) {
+	   case 0:
+	    $blocks['content'] = suggestions_news_block();
+	  break;
+	 }
+ }
+ return $blocks;
+}
+ 
+ function suggestions_theme() {
+   return array(
+     'suggestions_form'=>array(
+        'template'=>'suggestions-page',
+        'arguments'=>array('form'=>NULL, 'content'=>NULL),
+      ),
+     'suggestion_block'=>array(
+         'template'=>'suggestions-block',
+         'arguments'=>array('out'=>NULL),
+      ),
+   );
+ }
+
+ function suggestions_news() {
+   if (user_is_logged_in()) {
+     $form = drupal_get_form('suggestions_news_form');
+     $data = unserialize(variable_get('suggestions'));
+     $content = $data['news'];
+   }else drupal_goto('/user');
+   return theme('suggestions_form', $form, $content );
+ }
+ 
+ function suggestions_lib() {
+   if (user_is_logged_in()) {
+     $form = drupal_get_form('suggestions_lib_form');
+      $data = unserialize(variable_get('suggestions'));
+      $content = $data['lib'];
+   }else drupal_goto('/user');
+   return theme('suggestions_form', $form, $content);
+ }
+ 
+ function suggestions_settings() {
+   $form = drupal_get_form('suggestions_settings_form');
+   return $form;
+ }
+ 
+ function suggestions_settings_form() {
+   $form = array();
+   $data = unserialize(variable_get('suggestions'));
+   $form['news_block'] = array(
+    '#type' => 'textarea',
+    '#wysiwyg' => true,
+    '#title'=> t('News Suggestion Text Block'),
+    '#cols' => 60,
+    '#rows' => 5,
+    '#default_value' => $data['news'],
+    '#description' => t("Please add HTML content here.This will appear on News Suggestions page"),
+    '#required'=>false,
+    );
+   
+   $form['lib_block'] = array(
+    '#type' => 'textarea',
+    '#wysiwyg' => true,
+    '#title'=> t('Library Suggestion Text Block'),
+    '#cols' => 60,
+    '#rows' => 5,
+    '#default_value' => $data['lib'],
+    '#description' => t("Please add HTML content here.This will appear on Library Suggestions page"),
+    '#required'=>false,
+    );
+    $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update'),
+    '#submit' => array('suggestions_update'),
+    );
+    return $form;
+ }
+ 
+ 
+ function suggestions_news_form() {
+   global $user;
+   $form = array();
+   
+   $form['agree'] = array('#type'=>'checkbox', 
+                    '#title'=>"<span class='verify'>".t("I verify x, y, x")."<span class='red'>".t('*')."</span></span>",
+                    '#required' =>true,
+                     );
+   $form['headline'] = array('#type'=>'textfield', 
+                             '#title'=>t("Headline"),
+                       );
+   $form['author'] = array('#type'=>'textfield', '#title'=>t("Author"), '#default_value'=> $user->name);
+   $form['source'] = array('#type'=>'textfield', '#title'=>t('Source'));
+   $form['comment'] = array('#type'=>'textarea', '#title'=>t('Comment'));
+   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#submit' => array('suggestions_news_submit'), '#element_validate'=>array('suggestions_news_form_validate'), '#weight' => 1);
+   return $form;
+ }
+
+ function suggestions_lib_form() {
+   global $user;
+   $form = array();
+   $form['#attributes'] = array('enctype' => "multipart/form-data"); 
+   $form['agree'] = array('#type'=>'checkbox',
+                    '#title'=>"<span class='verify'>".t("I verify x, y, x")."<span class='red'>".t('*')."</span></span>",
+                    '#required' =>true,
+                    );
+   $form['radio_b'] = array(
+                        '#type' => 'radios',
+                        '#options'=> array('value1'=>t('Label 1'), 'value2'=>t('Label 2'), 'value3'=>t('Label 3')),
+                        '#required'=>true,
+                      );
+  $form['title'] = array(
+                       '#title'=>t("Title")."<span class='red'>".t(' * ')."</span>",
+                       '#required'=>true,
+                       '#type'=>'textfield',
+                      );
+  $form['url'] = array(
+                        '#title'=>t("URL"),
+                        '#type'=>'textfield',
+                      );
+  $form['upload'] = array(
+                        '#title'=>t("Attach"),
+                        '#type'=>'file',
+                        '#size'=>31,
+                        
+                      );
+                 
+  $form['blah'] = array(
+                       '#title'=>t("blah blah"),
+                        '#type'=>'textfield',
+                      );
+  $form['comment'] = array(
+                        '#title'=>t("comment"),
+                        '#type'=>'textarea',
+                      );
+  
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#submit' => array('suggestions_lib_submit'), '#element_validate'=>array('suggestions_lib_form_validate'), '#weight' => 1);
+  return $form; 
+ }
+ 
+ function suggestions_news_form_validate($element, &$form_state) {
+   p2_test($form_state); exit;
+ }
+ 
+  function suggestions_lib_form_validate($element, &$form_state) {
+   p2_test($form_state); exit;
+ }
+ 
+ function suggestions_update($form, &$form_state) {
+   $variables = $form_state['values'];
+   $var['news'] = $variables['news_block'];
+   $var['lib'] = $variables['lib_block'];
+   $vars = serialize($var);
+   variable_set('suggestions',$vars);
+  }
+ function suggestions_news_block() {
+  $dest = drupal_get_destination();
+  
+  $out = "<ul>";
+   $out .= "<li>".l(t("News Item"), 'suggest/news');
+   $out .= "<li>".l(t("Tag Change"), 'suggest/news',array('query'=>$dest));
+   $out .= "<li>".l(t("Something Else"), 'suggest/news',array('query'=>$dest));
+  $out .= "</ul>";
+  return theme("suggestion_block", $out);
+ }

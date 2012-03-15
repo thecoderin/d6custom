@@ -1,0 +1,99 @@
+<?php
+ function seeall_news_block($op='list',$delta=0,$edit=array()){
+ 
+ 	switch($op){
+ 		case 'list':
+		   
+		  $block[0]['info']=t('See Also News Details');
+			return $block;
+		   break;
+ 
+		case 'view':
+			  
+			$content=_get_seeall_content();
+ 			
+			$block['content']= $content ;
+			return $block;
+			break;
+ 	}
+ }
+ 
+  
+ 
+/* function theme_seeall_news_show($content){
+ 	$out='<ul>'.$content.'</ul>';
+	return $out;	
+ } */
+ 
+
+
+ 
+
+ 
+ 
+ function _get_seeall_content(){
+  $nid=arg(1);
+ 
+  $node=node_load($nid);
+ if(count($node->field_news_categories)>0)
+
+  {
+
+       foreach($node->field_news_categories as $n)
+
+       {
+
+          $category[]= $n['nid'];
+
+       }
+
+      foreach($category as $c_nid)
+
+      {
+
+	$n_category=node_load($c_nid);
+
+	if(count($n_category->taxonomy)>0)
+
+	{
+
+	 
+
+	   foreach($n_category->taxonomy as $tid)
+
+	   {
+	      
+	      $tagname[]=$tid->name;
+	      $tag_url[]=l($tid->name, drupal_get_path_alias('taxonomy/term/'.$tid->tid));
+
+	   }
+
+	}
+
+      }
+
+  }
+$comma_separated = implode(", ", array_unique($tag_url));
+ if($comma_separated=='')
+ {
+ 	return;
+ }
+ 
+ $html='<div class="block-right">
+  <div class="side-c-header-first">
+    See Also
+  </div>
+  <ul>
+    <li>If you are interested in this news item, you might also like other SWJ content tagged under '. $comma_separated.'</li>
+  </ul>
+</div>';
+ 
+ 
+  
+  
+  
+   
+  return $html;
+ }
+ 
+?>

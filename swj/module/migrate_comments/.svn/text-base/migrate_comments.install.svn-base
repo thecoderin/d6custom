@@ -1,0 +1,15 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+
+ function migrate_comments_install() {			
+  $values = array('comment_id'=>0, 'timestamp'=>1312174740);	
+  $variable = serialize($values);
+  variable_set('migrate_comments',$variable);
+}
+
+function migrate_comments_uninstall() {
+  variable_del('migrate_comments');
+} 

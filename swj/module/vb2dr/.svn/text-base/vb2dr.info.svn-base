@@ -1,0 +1,8 @@
+; $Id: 
+
+name = Vbulletin to Drupal User Migration
+package = Developer Build
+description =  Migrating vBulletin User Data to Drupal
+
+core = 6.x
+Version = "6.x-0.beta"

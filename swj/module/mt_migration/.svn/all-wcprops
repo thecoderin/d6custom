@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/mt_migration
+END
+mt_migration.info
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/mt_migration/mt_migration.info
+END
+mt_migration.module
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/mt_migration/mt_migration.module
+END
+mt_migration.install
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/mt_migration/mt_migration.install
+END

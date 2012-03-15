@@ -1,0 +1,379 @@
+<?php
+
+ define(MAX_CONTENT_PER_RUN, 50);
+
+function mt_migration_menu() {
+  $items['admin/settings/mt_migration'] = array(
+	  'title' => t('MT-Migration'),
+	  'description' => t('Set Movable Type DB details on <i>settings.php</i> and run the migration by click on the update button or call through this ').l(t('link'), 'mt_migration'),
+      'access arguments' => array('administer nodes'),
+	  'page callback' => 'mt_migration_check',
+	  'type' => MENU_NORMAL_ITEM,
+		);
+ $items['mt_migration'] = array(
+          'title' => t('MT-Migration'),
+          'access arguments' => array('access content'),
+          'page callback' => 'mt_migration_cleanup',
+          'type' => MENU_CALLBACK,
+                );
+  $items['mt_duplicates'] = array(
+          'title' => t('MT-Migration'),
+          'access arguments' => array('access content'),
+          'page callback' => 'mt_getPageReady',
+          'type' => MENU_CALLBACK,
+                );
+  return $items;
+}
+
+function mt_migration_help($path, $arg) {
+  switch($path) {
+    case 'admin/help#mt_migration':
+	  return t('Set Movable Type DB details on')." <i>settings.php</i> ".t('and run the migration by click on the update button or call through this ').l(t('link'), 'mt_migration');
+	break;
+  }
+}
+
+function mt_migration_check() {
+  return drupal_get_form('mt_migration_data');
+}
+/*
+function mt_migration_cron() {
+  mt_migration_remove_duplicates();
+  return true;
+}
+*/
+function myfn_delete_articles() {
+ global $user;
+ $contenttype = 'blog';
+ if ($user->uid == 1) {
+   $i = 1;
+	$result = db_query("SELECT nid FROM {node} n WHERE n.type = '%s' LIMIT 0, 1000 ",$contenttype );
+	while ($row = db_fetch_object($result)) {
+	    //print_r($row);exit;
+		node_delete($row->nid);
+		$data = $i.". Deleted: ".$row->nid."<br>";
+		$i++;
+	}
+ }
+ if ($data) return $data; else return true;
+}
+
+
+function mt_migration_remove_duplicates() {
+  mt_migration_del('blog');
+  mt_migration_del('article');
+  $sql = db_query("select nid from node order by nid desc limit 0, 1");
+  $so = db_fetch_object($sql);
+  $incr =  $so->nid + 1;
+ $q1 = db_query("ALTER TABLE node AUTO_INCREMENT=%d", $incr);
+ $q2 = db_query("ALTER TABLE node_revisions AUTO_INCREMENT=%d", $incr);
+  drupal_set_message("Next nid:".$incr);
+  return true;
+}
+function mt_migration_del($type) {
+  $previous = array();
+  $sql = "SELECT nid, title, created FROM {node} WHERE title IN (SELECT title FROM {node} WHERE type ='%s' GROUP BY title HAVING count(*) > 1) ORDER BY title, nid DESC";
+  $result = db_query($sql, $type);
+  while ($row = db_fetch_array($result)) {
+	if($row['title'] == $previous['title'] && $row['created'] == $previous['created']) {
+	  node_delete($previous['nid']);
+	}
+	$previous = $row;
+  }
+  return true;
+}
+
+function mt_migration_data() {
+    $form = array();
+	$form['update'] = array(
+			'#type' => 'submit',
+			'#value' => t("Update"),
+			'#submit' => array('mt_migration_update'),
+			'#weight' => 0,
+			);
+	return $form;
+}
+
+function mt_migration_update() {
+  //$vars = unserialize(variable_get('mt_migration'));
+//  print_r($vars);
+
+/*  $vars['last_node'] = 6139;
+  $vars['updated'] = time();
+  $variable = serialize($vars);
+  variable_set('mt_migration', $variable);exit;
+*/
+  return mt_migration_update_content(5817);
+}
+
+function mt_migration_update_comment($entry_id = 0, $node) {
+ if ($entry_id > 0 ) {
+	$comment = array();
+	db_set_active('mtdb');
+	db_query("SET NAMES 'utf-8'");
+	$sql = "SELECT com.comment_id as id, com.comment_author as author, 
+              com.comment_email as mail, 
+              unix_timestamp(com.comment_created_on) as created, 
+              com.comment_text as comment, 
+              com.comment_url as url 
+              FROM {mt_comment} com WHERE com.comment_entry_id = %d";
+	$result = db_query($sql, $entry_id);
+	/* To replace non-HTML characters with HTML characters */
+	$rep = array();
+	$rep[0] = chr(146);
+	$rep[1] = chr(147);
+	$rep[2] = chr(148);
+	$rep[3] = chr(150);
+	$arr = array();
+	$arr[0] = "&#39;";
+	$arr[1] = "&ldquo;";
+	$arr[2] = "&rdquo;";
+	$arr[3] = "&ndash;";
+	/**********************************************************/
+	while ($row = db_fetch_object($result)) {
+		db_set_active('default');
+		$comment['nid'] = $node->nid;
+		$comment['pid'] = 0;
+		$usr = user_load(array('mail'=>$row->mail));
+		if ($usr->uid >0) {
+		  $comment['uid'] = $usr->uid;
+		}else {
+		  $comment['uid'] = 0;
+		}
+		$comment['format'] = 1;
+		$comment['subject'] = "Re: ".strip_tags($node->title);
+		$comment['mail'] = $row->mail;
+		$comment['homepage'] = $row->url;
+		$comment['comment'] = utf8_encode(str_replace($rep, $arr, $row->comment));
+		$comment['name'] = utf8_encode(str_replace($rep, $arr, $row->author));
+               if ($row->created > 0) 	$comment['timestamp'] = $row->created;
+		comment_save($comment);
+	}
+	
+  }
+  return;
+}
+
+function mt_migration_update_author($user_id = 0) {
+
+  if ($user_id > 0) {
+    $node = new StdClass();
+    db_set_active('default');
+	$check_user = "SELECT op_author as nid FROM {mt_migration} WHERE mt_author = %d";
+	$result = db_query($check_user, $user_id);
+	
+	if ($result->num_rows > 0) {
+	  $data = db_fetch_object($result);
+	  $node = node_load($data->nid);
+	}
+	else {
+	  db_set_active('mtdb');
+	  db_query("SET NAMES 'utf-8'");
+	  $get_user = "SELECT author.author_id as id, author.author_nickname as name FROM {mt_author} author WHERE author.author_id= %d";
+	  $result = db_query($get_user, $user_id);
+	  /* To replace non-HTML characters with HTML characters change made on 24July2011*/
+	$rep = array();
+	$rep[0] = chr(146);
+	$rep[1] = chr(147);
+	$rep[2] = chr(148);
+	$rep[3] = chr(150);
+	$arr = array();
+	$arr[0] = "&#39;";
+	$arr[1] = "&ldquo;";
+	$arr[2] = "&rdquo;";
+	$arr[3] = "&ndash;";
+	/**********************************************************/
+	  
+	  if ($data = db_fetch_object($result)) {
+	    
+	    db_set_active('default');
+		
+	    $node->type = 'author';
+		$node->title = strip_tags(str_replace($rep, $arr, $data->name));
+		$node->created = time();
+		$node->status = 1;
+		$node->uid = 1;
+		$node->language = 'en';
+		content_presave($node);
+		node_save($node);
+		content_insert($node);
+		$migrate = "INSERT INTO {mt_migration} (mt_author, op_author) VALUES (%d, %d)";
+		$result = db_query($migrate, $data->id, $node->nid);
+		if($result) {
+		  $msg = "New Author Profile Created for author ".l($node->title, "node/".$node->nid); 
+		  drupal_set_message($msg);
+		}
+	  }
+	}
+	return $node;
+  }
+  else return false;
+}
+
+function mt_migration_update_content($content_id =0) {
+  db_set_active('mtdb');
+  db_query("SET NAMES 'utf-8'");
+   $bl = 0;
+   $ar = 0;
+   $sql = "SELECT author.author_id as auid, entry.entry_id as eid, entry.entry_title as etitle, 
+		  entry.entry_text as ebody, entry.entry_excerpt as excerpt, unix_timestamp(entry.entry_created_on) as created
+		  FROM {mt_entry} entry JOIN {mt_author} author ON entry.entry_author_id = author.author_id 
+		  AND entry.entry_id = %d LIMIT 0, %d";
+  //$result = db_query($sql, $content_id, MAX_CONTENT_PER_RUN);
+  $result = db_query($sql, $content_id, 1);
+/* To replace non-HTML characters with HTML characters */
+	$rep = array();
+	$rep[0] = chr(146);
+	$rep[1] = chr(147);
+	$rep[2] = chr(148);
+	$rep[3] = chr(150);
+	$arr = array();
+	$arr[0] = "&#39;";
+	$arr[1] = "&ldquo;";
+	$arr[2] = "&rdquo;";
+	$arr[3] = "&ndash;";
+	/**********************************************************/
+  
+  while( $row = db_fetch_object($result)) {
+    
+	$author_node = mt_migration_update_author($row->auid);
+	$node = new StdClass();
+	$node->title = strip_tags(str_replace($rep, $arr, $row->etitle));
+
+	$body = utf8_encode(str_replace($rep, $arr, $row->ebody));
+        $teaser =  utf8_encode(str_replace($rep, $arr, $row->excerpt));       
+        $node->body = mt_cleanText($body);
+	$node->field_teaser[0]['value'] = mt_cleanText($teaser);
+	$node->field_op_author[0]['value'] = $author_node->nid;
+	$node->created = $row->created;
+	$node->comment = 2;
+	$node->modified = $row->created;
+	$node->uid = 1;
+	$node->language = 'en';
+	$node->status = 1;
+	$id = $row->eid;
+	db_set_active('mtdb');
+	db_query("SET NAMES 'utf-8'");
+	$check_type = "SELECT placement_category_id FROM {mt_placement} WHERE placement_entry_id = %d AND placement_category_id = %d";
+	$check_result = db_query($check_type, $row->eid, 5);
+	if ($check_result->num_rows > 0) {
+		$node->type = 'article';
+		$ar++;
+	}
+	else {
+		$node->type = 'blog';
+		$bl++;
+	}
+	db_set_active('default');
+	content_presave($node);
+	node_save($node);
+	content_insert($node);
+	$delta = mt_migration_author_delta($node->vid) +1;
+	$node->field_op_author += array($delta => array('nid' => $author_node->nid));
+	node_save($node);
+	content_insert($node);
+	mt_migration_update_comment($id, $node);
+	unset($node);
+        //mt_migration_update_status($id);
+	
+  }
+  $op = "Migrated ".$bl." blogs and ".$ar." articles with their authors and comments.";
+  drupal_set_message($op);
+  return $op;
+}
+
+
+
+function mt_migration_update_status($last_entry = NULL) {
+//  print "<br/>".$last_entry;
+  $vars['last_node'] = $last_entry;
+  $vars['updated'] = time();
+  variable_del('mt_migration');
+  $variable = serialize($vars);
+  variable_set('mt_migration', $variable);
+//  drupal_flush_all_caches();
+
+  return;
+}
+
+function mt_migration_author_delta($vid) {
+	 return db_result(db_query("SELECT delta FROM {content_field_op_author}
+                               WHERE vid = '%d'
+                               ORDER BY delta DESC
+                               LIMIT 1", $node_vid));
+
+}
+function mt_migration_cleanup() {
+  $vars = unserialize(variable_get('mt_cleanup'));
+  $last_update = $vars['last_node'];
+  $query = db_query("SELECT nid, title FROM {node} WHERE nid > %d ORDER BY nid LIMIT 0, %d", $last_update, MAX_CONTENT_PER_RUN);
+  while( $obj = db_fetch_object($query)) {
+    $nid = array('nid'=> $obj->nid);
+    $node = node_load($nid);
+    if ($node->type == 'blog' || $node->type == 'article') {
+     $node->body = mt_cleanText($node->body);
+     mt_commentCheck($node);
+     $node->field_teaser[0]['value'] = mt_cleanText( $node->field_teaser[0]['value']);
+     content_presave($node);
+     node_save($node);
+     content_insert($node);    
+
+    }
+
+    $last_update = $node->nid;
+    
+    unset($node);
+
+    $var = array('last_node'=> $last_update, 'updated'=>time());
+    $variable = serialize($var);
+    variable_set('mt_cleanup', $variable);
+  }
+  return $last_update;
+}
+function mt_cleanText($text) {
+// The following equals:    </p>\n\r<p >
+  $pbrp__tags = chr(60) . chr(47) . chr(112) . chr(62) . chr(13) . chr(10) . chr(60) . chr(112) . chr(32) . chr(62);
+  // The following equals:    </p>\n\r<p>
+  $pbrp_tags = chr(60) . chr(47) . chr(112) . chr(62) . chr(13) . chr(10) . chr(60) . chr(112) . chr(62);
+  $p_tags = "</p><p >";
+  $newline  = chr(13) . chr(10);
+  $br_tag = "<br />";
+  $text = ereg_replace($pbrp_tags, $p_tags, $text);
+  $text = ereg_replace($pbrp__tags, $p_tags, $text);
+  $text = ereg_replace($newline, $br_tag, $text);
+  $text = nl2br($text);
+  return $text;
+   
+}
+
+function mt_commentCheck($node) {
+  //get comment count in MT
+  db_set_active('mtdb');
+  $sql = db_query("SELECT entry_id FROM {mt_entry} WHERE entry_title like '%s'", $node->title);
+  while($obj1 = db_fetch_object($sql)) {
+    if ($obj1->entry_id) {
+      $q1 = db_fetch_object(db_query("SELECT count(*) as count FROM {mt_comment} WHERE comment_entry_id=%d", $obj1->entry_id));
+	  db_set_active('default');
+	  $q2 = db_fetch_object(db_query("SELECT count(*) as count FROM {comments} WHERE nid=%d", $node->nid));
+	  if ( $q1->count > 0 && $q2->count == 0) {
+	     mt_migration_update_comment($obj1->entry_id, $node);
+	  }
+    }
+  }
+  return;
+}
+
+
+function mt_getPageReady() {
+  for($nid = 6300; $nid < 6400; $nid++) {
+  
+    $node = node_load($nid);
+    $node->body = str_replace("<br />", "", $node->body);
+    content_presave($node);
+    node_save($node);
+    content_insert($node);
+    unset($node);
+  }
+  return 1;
+}
+

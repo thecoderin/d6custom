@@ -1,0 +1,301 @@
+<?php
+
+
+/**
+* Implementation of hook_block().
+*/
+function authors_sidebar_block($op = 'list', $delta = 0) {
+ $blocks = array();
+ switch ($op) {
+   case 'list':
+    $blocks[0]['info'] = t('Author Sidebar');
+   break;
+   case 'view':
+     switch ($delta) {
+	   case 0:
+	    $blocks['content'] = authors_getBlock();
+	  break;
+	 }
+ }
+ return $blocks;
+}
+
+/**
+* Implementation of hook_menu().
+*/
+function authors_sidebar_menu() {
+  $items = array();
+  $items['admin/settings/author-sidebar'] = array(
+    'title' => t('Author Sidebar'),
+	'description' => 'Enable new author sidebar',
+    'page callback' => 'authors_sidebar_add',
+    'access arguments' => array('Author Sidebar'),
+    'type' =>MENU_NORMAL_ITEM,
+   );
+   $items['admin/settings/author-sidebar/delete'] = array(
+     'title' => t('Delete Author Sidebar'),
+	 'page callback' => 'authors_sidebar_delete',
+	 'access arguments' => array('Author Sidebar'),
+	 'type' => MENU_CALLBACK,
+   );
+   $items['admin/settings/author-sidebar/edit'] = array(
+     'title' => t('Edit Author Sidebar Content'),
+	 'page callback' => 'authors_sidebar_edit',
+	 'access arguments' => array('Author Sidebar'),
+	 'type' => MENU_CALLBACK,
+   );
+   $items['authors-sidebar/suggestion'] = array(
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+	'page callback' => 'authors_sidebar_suggest',
+   );
+   return $items;
+}
+
+/**
+* Implementation of hook_perm().
+*/
+function authors_sidebar_perm() {
+  return array(
+			"Author Sidebar"
+		);
+}
+
+function authors_sidebar_list() {
+  $query = "SELECT id, author_nid as nid FROM {authors_sidebar} ORDER BY timestamp DESC";
+  $count = "SELECT COUNT(id) FROM {authors_sidebar}";
+  $result = pager_query($query, 15, 0, $count);
+  $data = array();
+  $incr = 0;
+  
+  while ($obj = db_fetch_object($result)) {
+    $edit = "admin/settings/author-sidebar/edit/".$obj->id;
+	$del = "admin/settings/author-sidebar/delete/".$obj->id;
+	$auth_query = "SELECT nid, title FROM {node} WHERE type='author' AND nid=".$obj->nid;
+	$name = db_fetch_object(db_query($auth_query));
+	$data[$incr]['author'] = l($name->title, "node/".$name->nid);
+	$data[$incr]['edit'] = l(t("Edit"), $edit);
+	$data[$incr]['delete'] = l(t("Delete"), $del);
+	$incr++;
+  }
+  
+  return $data;
+}
+function authors_sidebar_delete() {
+  if (arg(3) == 'delete' && is_numeric(arg(4))) {
+    $query = "DELETE FROM {authors_sidebar} WHERE id=%d";
+	$result = db_query($query, arg(4));
+	if ($result) drupal_set_message("Author Sidebar Deleted !");
+  }
+  drupal_goto('admin/settings/author-sidebar');
+}
+function authors_sidebar_add() {
+ $form = drupal_get_form('authors_sidebar_add_form');
+ $data = authors_sidebar_list();
+ return theme('sidebar_management', $form, $data);
+}
+function authors_sidebar_edit() {
+  return drupal_get_form('authors_sidebar_edit_form');
+}
+
+
+
+function authors_sidebar_theme() {
+  return array(
+	'sidebar_management' => array(
+		'template' => 'sidebar-management',
+		'arguments' => array('form' => NULL, 'data'=> NULL),
+		),
+	'sidebar_block' => array(
+		'template' => 'sidebar-block',
+		'arguments' => array('content'=>NULL),
+		),
+  );
+}
+
+function authors_getBlock() {
+  
+  $nid = arg(1);
+  $node = node_load($nid);
+  $content = array();
+  if ($node->type == 'author') {
+	$author_id = array($nid);
+ }elseif ($node->type == 'article' || $node->type == 'blog') {
+    foreach ($node->field_op_author as $author) {
+		$author_id[] = $author['nid'];
+	}
+	
+  }
+  if (count($author_id) > 0) {
+	$i = 0;
+	foreach ($author_id as $aid) {
+		$query = "SELECT content FROM {authors_sidebar} WHERE author_nid=%d";
+		$result = db_query($query, $aid);
+		if ($obj = db_fetch_object($result)) {
+			$data = $obj->content;
+			$variables = unserialize($data);
+			$content[$i]['head'] = $variables['headline'];
+			$content[$i]['body'] = $variables['content'];
+			$i++;
+		}
+	}
+  }else return false;
+  return theme('sidebar_block',$content);
+}
+
+function authors_sidebar_edit_form() {
+  $form = array();
+  if (arg(3) == 'edit' && is_numeric(arg(4))) {
+    $query = "SELECT id, author_nid as nid, content FROM {authors_sidebar} WHERE id=%d";
+	$result = db_query($query, arg(4));
+	if ($obj = db_fetch_object($result)) {
+		/*$content = $obj->content;*/
+		$variables = unserialize($obj->content);
+		$content = $variables['content'];
+		$headline = $variables['headline']; 
+		$id = $obj->id;
+		$auth_query = "SELECT nid, title FROM {node} WHERE type='author' AND nid=".$obj->nid;
+		$name = db_fetch_object(db_query($auth_query));
+		$title = $name->title."[".$obj->nid."]";
+	}
+  $form['author_profile'] = array(
+	'#type' => 'textfield',
+	'#size' => 60,
+	'#title' => t('Author Profile'),
+	'#autocomplete_path' => 'authors-sidebar/suggestion',
+	'#default_value' => $title,
+	'#description' => t("this field cannot edit. To change user profile you have to delete this entry."),
+	'#value' =>$title,
+	'#weight'=>40,
+	'#disabled' => TRUE,
+	);
+   $form['author_headline'] = array(
+	'#type' => 'textfield',
+	'#size' => 60,
+	'#title' => t('Sidebar Headline'),
+	'#description' => t("If you need to add a headline on <i> <b>black</b> background with <b>white</b> letters</i> please put it here. "),
+	'#default_value' => $headline,
+	'#required'=>false,
+	'#weight'=>45,
+	);
+  $form['author_content'] = array(
+	'#type' => 'textarea',
+	'#wysiwyg' => true,
+	'#title'=> t('Sidebar Content'),
+	'#cols' => 60,
+    '#rows' => 5,
+	'#default_value' => $content,
+	'#description' => t("Please add HTML content here to show on Author Specific Sidebar."),
+	'#required'=>true,
+	'#weight' => 50,
+	);
+  $form['id'] = array(
+    '#type' => 'hidden',
+	'#value' => $id,
+	);
+	$form['submit'] = array(
+	'#type' => 'submit',
+	'#value' => t('Update'),
+	'#submit' => array('authors_sidebar_update'),
+	'#weight' => 100,
+	);
+  }
+  return $form;
+}
+
+
+function authors_sidebar_add_form() {
+ // $ckeditor_format = authors_sidebar_get_ckeditor_format();
+  $form = array();
+  $form['author_profile'] = array(
+	'#type' => 'textfield',
+	'#size' => 60,
+	'#title' => t('Author Profile'),
+	'#autocomplete_path' => 'authors-sidebar/suggestion',
+	'#description' => t("Start Typing Author name and select from ajax suggestion."),
+	'#required'=>true,
+	'#weight'=>40,
+	);
+  $form['author_headline'] = array(
+	'#type' => 'textfield',
+	'#size' => 60,
+	'#title' => t('Sidebar Headline'),
+	'#description' => t("If you need to add a headline on <i> <b>black</b> background with <b>white</b> letters</i> please put it here. "),
+	'#required'=>false,
+	'#weight'=>45,
+	);
+  $form['author_content'] = array(
+	'#type' => 'textarea',
+	'#wysiwyg' => true,
+	'#title'=> 'Sidebar Content',
+	'#description' => t("Please add HTML content to show on Author Specific Sidebar."),
+	'#cols' => 60,
+    '#rows' => 5,
+	'#required'=>true,
+	'#weight' => 50,
+	);
+/*  
+  $form['format'] = filter_form(2, NULL, array('format'));
+  $form['format']['#weight'] = 50;
+*/  
+  $form['submit'] = array(
+	'#type' => 'submit',
+	'#value' => t('Save'),
+	'#submit' => array('authors_sidebar_save'),
+	'#weight' => 100,
+	);
+	
+  return $form;
+}
+function authors_sidebar_update($form, &$form_state) {
+    $data = $form_state[values];
+	
+	$variables = array();
+	$variables['headline'] = trim($data['author_headline']);
+	$variables['content'] = trim($data['author_content']);
+	$content = serialize($variables);
+	$query = "UPDATE {authors_sidebar} SET content = '%s' WHERE id=%d";
+	$result = db_query($query, $content, $data['id']);
+	if ($result) {
+	  drupal_set_message("Authur Sidebar Updated ".$data['author_profile']);
+	}
+	drupal_goto("admin/settings/author-sidebar");
+}
+
+function authors_sidebar_save($form, &$form_state) {
+  $data = $form_state[values];
+  if (preg_match('/\[(.+?)\]/', $data['author_profile'], $group)) {
+    $author_id = $group[1];
+ }
+ $variables = array();
+ $variables['headline'] = $data['author_headline'];
+ $variables['content'] = trim($data['author_content']);
+ $content = serialize($variables);
+ $timestamp = time();
+ $query = "INSERT INTO {authors_sidebar} (author_nid, content, timestamp) VALUES (%d, '%s', '%s') "; 
+ $result = db_query($query, $author_id, $content, $timestamp);
+ if ($result) {
+	$message = "Author Sidebar Created for ".$data['author_profile'];
+	drupal_set_message($message);
+	}
+	return true;
+}
+
+function authors_sidebar_suggest($userString = "") {
+  $sql = "select nid, title from {node} where nid NOT IN (select distinct author_nid from authors_sidebar) AND status='1' and type='author' and lower(title) like lower('%%%s%%') order by title asc";
+  // query the database
+  $resource = db_query_range($sql, $userString, 0, 10);
+
+  // loop through the results and create an associative array
+  $results = array();
+  while ($row = db_fetch_array($resource)) {
+    $content = $row['title']."[".$row['nid']."]"; 
+  $results[$content] = $row['title'];
+  }
+
+  // output the results in javascript
+  print drupal_to_js($results);
+
+  // exit, to prevent your results form hitting the theme layer
+  exit();
+}

@@ -1,0 +1,5 @@
+;$Id$
+name=Movable Type Migration
+description=Module to migrate data from MT to Drupal
+core=6.x
+package=Developer Build

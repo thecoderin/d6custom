@@ -1,0 +1,8 @@
+.verify {
+	float: left;
+    margin-right: 5px;
+    margin-top: -2px;
+}
+.red {
+  color: #ff0000;
+}

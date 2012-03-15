@@ -1,0 +1,161 @@
+<?php
+ function relatedpopular_category_block($op='list',$delta=0,$edit=array()){
+ 
+ 	switch($op){
+ 		case 'list':
+		   
+		  $block[0]['info']=t('See Related Popular SWJ Content Category');
+			return $block;
+		   break;
+ 
+		case 'view':
+			  
+			$content=get_data_for_block_category_popular();
+ 			
+			$block['content']= $content ;
+			return $block;
+			break;
+ 	}
+ }
+ 
+  
+ 
+/* function theme_relatedpopular_category_show($content){
+ 	$out='<ul>'.$content.'</ul>';
+	return $out;	
+ } */
+ 
+
+
+ 
+
+ 
+ function _get_related_popular_content_category($get_comma_seperated){
+  $nid=arg(1);
+
+  $node=node_load($nid);
+ if(count($node->taxonomy)>0)
+
+  {
+
+        
+
+      foreach($node->taxonomy as $c_nid)
+
+      {
+
+	$n_category=node_load($c_nid);
+
+	if(count($n_category->taxonomy)>0)
+
+	{
+
+	 
+
+	   foreach($n_category->taxonomy as $tid)
+
+	   {
+	      
+	      $tagname[]="'".$tid->name."'";
+	      $tag_url[]=l($tid->name, drupal_get_path_alias('taxonomy/term/'.$tid->tid));
+
+	   }
+
+	}
+
+      }
+
+  }
+ 
+  if($get_comma_seperated==1)
+  {
+  	return implode(",", array_unique($tagname));
+  }
+$comma_separated = implode(",", array_unique($tag_url));
+ 
+ 
+ $html='<div class="block-right">
+  <div class="side-c-header-first">
+    See Also
+  </div>
+  <ul>
+    <li>If you are interested in this news item, you might also like other SWJ content tagged under '. $comma_separated.'</li>
+  </ul>
+</div>';
+  return $html;
+ }
+ 
+function get_nodes_from_tags_category_popular()
+{
+	 
+ 
+	$tags= _get_related_popular_content_category(1)  ;
+ 
+	// maximum number of items to show:
+	$count = 6000;
+
+	$result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title
+	FROM {node} n
+	INNER JOIN {term_node} tn ON n.nid = tn.nid
+	INNER JOIN {term_data} td ON tn.tid = td.tid
+	WHERE td.name IN ($tags) AND
+	n.status = 1
+	ORDER BY n.created DESC"), 0,$count);
+ 
+	 
+	while ($node = db_fetch_object($result)) 
+	{
+	  $items[] =  $node->nid ;
+	} 
+ return serialize(array_unique($items));  
+}
+function get_data_for_block_category_popular()
+{
+$related_nodes=implode(",", unserialize(get_nodes_from_tags()));  
+$find_energy_nodes=db_query("SELECT id,energy
+FROM  radioactivity ra
+JOIN  node nd ON nd.nid = ra.id
+WHERE DATEDIFF(NOW(),DATE_FORMAT(FROM_UNIXTIME(ra.last_emission_timestamp ),'%s' )) < 7
+AND ra.class = 'node'
+AND nd.type
+IN ('blog', 'article')
+AND ra.id IN($related_nodes)
+ORDER BY energy DESC LIMIT 0,5",'%Y-%m-%d %H:%i:%s');
+  
+  
+if ($find_energy_nodes->num_rows != 0)
+		{
+			while ($node = db_fetch_object($find_energy_nodes)) 
+			{
+				
+				 $loaded_nodes=node_load($node->id);
+				 $title=l($loaded_nodes->title,drupal_get_path_alias('node/'.$loaded_nodes->nid));
+				 if(isset($loaded_nodes->field_op_author) and count($loaded_nodes->field_op_author)>0)
+				 {
+				 	foreach($loaded_nodes->field_op_author as $a_nid)
+				 	{
+				 		
+				 		$load_author=node_load($a_nid);
+				 		l($load_author->title, drupal_get_path_alias('node/'. $a_nid));
+				 		$author_name= l($load_author->title, drupal_get_path_alias('node/'.$load_author->nid));
+				 	}
+				 	$authors=implode(",", $author_name);
+				 	$rel_content[]="<li>". $title." by ".$author_name."</li>" ;
+				 }
+			}
+
+			return '<div class="block-right">
+  <div class="side-c-header-first">
+   Most Popular Related SWJ Content
+	</div>
+    <div class="article-heading">
+	<ul>'. implode(" ", $rel_content).'</ul>
+
+	</div>
+
+</div>';
+		}	
+		
+		 
+}
+?>

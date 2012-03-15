@@ -1,0 +1,6 @@
+; $Id$//
+name = Old URL redirector
+description = Old URL Redirector, Changes on .htaccess file
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-beta

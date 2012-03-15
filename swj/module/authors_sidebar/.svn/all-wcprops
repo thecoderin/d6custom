@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar
+END
+authors_sidebar.module
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar/authors_sidebar.module
+END
+authors_sidebar.install
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar/authors_sidebar.install
+END
+sidebar-block.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar/sidebar-block.tpl.php
+END
+sidebar-management.tpl.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar/sidebar-management.tpl.php
+END
+authors_sidebar.info
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/8766/SWJ/trunk/sites/all/modules/smallwars/authors_sidebar/authors_sidebar.info
+END

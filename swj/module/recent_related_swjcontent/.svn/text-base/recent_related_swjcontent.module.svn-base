@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * Implementation of hook_block().
+ */
+function recent_related_swjcontent_block($op = 'list', $delta = 0) {
+  $blocks = array();
+  switch ($op) {
+    case 'list':
+      $blocks[0]['info'] = t('Recent Related SWJ Content - News');
+      $blocks[1]['info'] = t('Recent Related SWJ Content - Category');
+      break;
+    case 'view':
+      switch ($delta) {
+        case 0:
+          $blocks['content'] = recent_related_swjcontent_news();
+          break;
+        case 1:
+          $blocks['content'] = recent_related_swjcontent_cat();
+        break;
+      }
+  }
+  return $blocks;
+}
+
+function recent_related_swjcontent_cat() {
+  $content_types = "'blog', 'article'";//content types that are displayed in specified block
+  $node = node_load(arg(1));//getting nid from url using arg() fn.http://api.drupal.org/api/drupal/includes--path.inc/function/arg/6
+  $tags = array();
+  swj_p2_getTags($node, $tags);//get taxonomy array from desired node object defined in swj_p2 module
+  unset($node);
+  $tags = swj_p2_arrayUnique($tags);//removing duplicate tags, not happen in this case but added to avoid errors, defined in swj_p2 module
+  foreach ($tags as $tag) {
+    $tid[] = $tag->tid;
+  }
+  $t = implode(',', $tid); //create comma separate string of tids 
+  
+  $query = "SELECT  DISTINCT(node.nid) as nid,
+  node.title as node_title,
+  auth_node.title as author_title,
+  auth_node.nid as author_nid
+  FROM node {node}
+  INNER JOIN {term_node term_node} ON node.vid = term_node.vid
+  INNER JOIN {content_field_op_author} author ON node.nid = author.nid
+  INNER JOIN {node} auth_node ON auth_node.nid = author.field_op_author_nid
+  WHERE (node.status <> 0) AND (node.type in (".$content_types.")) AND (term_node.tid in (".$t."))
+  ORDER BY node.created DESC LIMIT 0, 5";
+  $result = db_query($query);//http://api.drupal.org/api/drupal/includes--database.mysql-common.inc/function/db_query/6
+  $data = array();
+  $i = 0;
+  while ($row = db_fetch_object($result)) {
+    $data[$i]['content'] = l($row->node_title, "node/".$row->nid);
+    if (isset($row->author_nid)) {
+       $data[$i]['author'] = l($row->author_title, "node/".$row->author_nid);
+    }
+    $i++;
+  }
+  return theme('recent_related_swj_block', $data);//return data through hook_theme style the output.
+}
+
+function recent_related_swjcontent_news() {
+  $content_types = "'blog', 'article'";
+  $node = node_load(arg(1));
+  $categories = $node->field_news_categories;
+  $tags = array();
+  foreach ($categories as $category) {
+    $cat = node_load($category['nid']);
+    swj_p2_getTags($cat, $tags);
+    unset($cat);
+  }
+  unset($node);
+  $tags = swj_p2_arrayUnique($tags);
+  foreach ($tags as $tag) {
+    $tid[] = $tag->tid;
+  }
+  $t = implode(',', $tid);
+  
+  $query = "SELECT  DISTINCT(node.nid) as nid,
+  node.title as node_title,
+  auth_node.title as author_title,
+  auth_node.nid as author_nid
+  FROM node {node}
+  INNER JOIN {term_node term_node} ON node.vid = term_node.vid
+  INNER JOIN {content_field_op_author} author ON node.nid = author.nid
+  INNER JOIN {node} auth_node ON auth_node.nid = author.field_op_author_nid
+  WHERE (node.status <> 0) AND (node.type in (".$content_types.")) AND (term_node.tid in (".$t."))
+  ORDER BY node.created DESC LIMIT 0, 5";
+  $result = db_query($query);
+  $data = array();
+  $i = 0;
+  while ($row = db_fetch_object($result)) {
+    $data[$i]['content'] = l($row->node_title, "node/".$row->nid);
+    if (isset($row->author_nid)) {
+       $data[$i]['author'] = l($row->author_title, "node/".$row->author_nid);
+    }
+    $i++;
+  }
+  return theme('recent_related_swj_block', $data);
+}
+function recent_related_swjcontent_theme() {
+  return array(
+				  'recent_related_swj_block' => array(
+					'template' => 'recent-related-swj-block',
+					'arguments' => array('data'=> NULL))
+  );
+}

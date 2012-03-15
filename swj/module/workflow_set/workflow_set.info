@@ -1,0 +1,5 @@
+;$Id$
+name=Set Workflow State
+description=Move contents having no Workflow to Published state.
+core=6.x
+package=Developer Build

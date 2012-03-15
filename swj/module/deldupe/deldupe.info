@@ -1,0 +1,6 @@
+; $Id$//
+name = Delete Duplicate Nodes
+description = Delete Duplicate Nodes by Title
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma

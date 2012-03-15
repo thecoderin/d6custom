@@ -1,0 +1,200 @@
+<?php
+
+/**
+* Implementation of hook_form_alter().
+*/
+
+function account_information_form_alter(&$form, &$form_state, $form_id) {
+   //print $form_id;exit;
+  if ($form_id == 'user_register') {
+	//print "<pre>";print_r($form); print "</pre>";exit;
+	$vars = getSavedData();
+	if ($vars['username_label']) {
+		$form['name']['#title'] = trim($vars['username_label']);
+		}
+	if ($vars['username_desc']) {
+		$form['name']['#description'] = trim($vars['username_desc']);
+		}
+	if ($vars['email_label']) {
+		$form['mail']['#title'] = trim($vars['email_label']);
+		}
+	if ($vars['email_desc']) {
+		$form['mail']['#description'] = trim($vars['email_desc']);
+		}
+	}
+  if ($form_id == 'user_login') {
+	$vars = getSavedLoginData();
+	if ($vars['login_user_label']) {
+	  $form['name']['#title'] = trim($vars['login_user_label']);
+	}
+	if ($vars['login_user_desc']) {
+	  $form['name']['#description'] = trim($vars['login_user_desc']);
+	}
+	if ($vars['login_pass_label']) {
+	  $form['pass']['#title'] = trim($vars['login_pass_label']);
+	}
+	if ($vars['login_pass_desc']) {
+		$form['pass']['#description'] = trim($vars['login_pass_desc']);
+	}
+  }
+}
+
+/**
+* Implementation of hook_menu().
+*/
+
+function account_information_menu() {
+ 
+  $items['admin/user/reg-info'] = array(
+    'title' => t('Account Information Settings'),
+	'description' => 'Change Account Information Details of Registration form',
+	'page callback' => 'account_information_detail',
+	'access arguments' => array('administer users'),
+	'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/user/login-info'] = array(
+	'title' => t('Login Page Settings'),
+	'description' => t("Change the details of Login form"),
+	'page callback' => 'login_form_detail',
+	'access arguments' => array('administer users'),
+	'type' => MENU_NORMAL_ITEM,
+  );
+
+return $items;
+}
+
+function login_form_detail() {
+  return drupal_get_form('login_details_form');
+}
+
+function account_information_detail() {
+  return drupal_get_form('account_information_form');
+}
+
+
+/**
+* Implementation of hook_form().
+*/
+
+function login_details_form() {
+  $vars = getSavedLoginData();
+
+  $form = array();
+  $form['login_user_label'] = array(
+							'#type' => 'textfield',
+							'#title' => t('Username Label'),
+							'#description' => t('To Customize label with username field'),
+							'#default_value' => trim($vars['login_user_label']),
+							'#weight' => -50,
+							);
+  $form['login_user_desc'] = array(
+							'#type' => 'textarea',
+							'#title' => t('Username Description'),
+							'#description' => t('To Customize description with username field'),
+							'#default_value' => nl2br($vars['login_user_desc']),
+							'#weight' => -40,
+							);
+  $form['login_pass_label'] = array(
+							'#type' => 'textfield',
+							'#title' => t('Password Field Label'),
+							'#description' => t('To Customize label with Password field'),
+							'#default_value' => trim($vars['login_pass_label']),
+							'#weight' => -30,
+							);
+  $form['login_pass_desc'] = array(
+							'#type' => 'textarea',
+							'#title' => t('Password Field Description'),
+							'#description' => t('To Customize description with email field'),
+							'#default_value' => nl2br($vars['login_pass_desc']),
+							'#weight' => -20,
+							);
+  $form['msg'] = array(
+					'#type' => 'markup',
+					'#value' => "<p>".t("Leave the fields blank to show default values")."</p>",
+					'#weight' => -10,
+					);
+  $form['submit'] = array(
+						'#type' => 'submit',
+						'#value' => 'Save Data',
+						'#submit' => array('login_details_save'),
+						'#weight' => 0,
+					);
+  return $form;
+
+}
+
+function account_information_form() {
+  $vars = getSavedData();
+  $form = array();
+  $form['username_label'] = array(
+							'#type' => 'textfield',
+							'#title' => t('Username Label'),
+							'#description' => t('To Customize label with username field'),
+							'#default_value' => trim($vars['username_label']),
+							'#weight' => -50,
+							);
+  $form['username_desc'] = array(
+							'#type' => 'textarea',
+							'#title' => t('Username Description'),
+							'#description' => t('To Customize description with username field'),
+							'#default_value' => nl2br($vars['username_desc']),
+							'#weight' => -40,
+							);
+  $form['email_label'] = array(
+							'#type' => 'textfield',
+							'#title' => t('Email Label'),
+							'#description' => t('To Customize label with email field'),
+							'#default_value' => trim($vars['email_label']),
+							'#weight' => -30,
+							);
+  $form['email_desc'] = array(
+							'#type' => 'textarea',
+							'#title' => t('Email Description'),
+							'#description' => t('To Customize description with email field'),
+							'#default_value' => nl2br($vars['email_desc']),
+							'#weight' => -20,
+							);
+  $form['msg'] = array(
+					'#type' => 'markup',
+					'#value' => "<p>".t("Leave the fields blank to show default values")."</p>",
+					'#weight' => -10,
+					);
+  $form['submit'] = array(
+						'#type' => 'submit',
+						'#value' => 'Save Data',
+						'#submit' => array('account_information_save'),
+						'#weight' => 0,
+					);
+  return $form;
+}
+function login_details_save($form, &$form_state) {
+  $user_label = $form_state['values']['login_user_label'] ? $form_state['values']['login_user_label']: NULL;
+  $user_desc =  $form_state['values']['login_user_desc'] ? nl2br($form_state['values']['login_user_desc']): NULL;
+  $pass_label = $form_state['values']['login_pass_label'] ? nl2br($form_state['values']['login_pass_label']): NULL;
+  $pass_desc =  $form_state['values']['login_pass_desc'] ? nl2br($form_state['values']['login_pass_desc']): NULL;
+  $value1 = array('login_user_label'=>$user_label,  'login_user_desc'=>$user_desc, 'login_pass_label'=>$pass_label, 'login_pass_desc'=>$pass_desc);
+  $var1 = serialize($value1);
+  variable_set('login_information',$var1);
+  drupal_set_message("Configuration Saved !!");
+  return true;
+}
+function account_information_save($form, &$form_state) {
+  //print "<pre>";print_r($form_state);print "</pre>";exit;
+  $user_label = $form_state['values']['username_label'] ? $form_state['values']['username_label']: NULL;
+  $user_desc = $form_state['values']['username_desc'] ? nl2br($form_state['values']['username_desc']): NULL;
+  $email_label = $form_state['values']['email_label'] ? $form_state['values']['email_label']: NULL;
+  $email_desc = $form_state['values']['email_desc'] ? nl2br($form_state['values']['email_desc']): NULL;
+  $values = array('username_label'=>$user_label, 'username_desc'=>$user_desc, 'email_label'=>$email_label, 'email_desc'=>$email_desc);	
+  $variable = serialize($values);
+  variable_set('account_information',$variable);
+  drupal_set_message("Configuration Saved !!");
+  return true;
+}
+
+function getSavedData() {
+  return unserialize(variable_get('account_information',NULL));
+}
+
+function getSavedLoginData() {
+  return unserialize(variable_get('login_information',NULL));
+}

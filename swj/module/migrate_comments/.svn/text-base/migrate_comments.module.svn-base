@@ -1,0 +1,89 @@
+<?php
+
+
+function migrate_comments_mt() {
+  
+  $vars = unserialize(variable_get('migrate_comments'));
+  print_r($vars);
+  $comment = $vars['comment_id'];
+  $timestamp = $vars['timestamp'];
+  db_set_active('mtdb');
+  $sql = "SELECT com.comment_id AS cid, 
+		  com.comment_entry_id AS eid, 
+		  com.comment_ip AS ip, 
+		  convert( cast( com.comment_author AS binary ) USING utf8 ) AS author,
+		  com.comment_email AS mail, 
+		  unix_timestamp( com.comment_created_on ) AS created, 
+		  convert( cast( com.comment_text AS binary ) USING utf8 ) AS comment , 
+		  com.comment_url AS url, 
+		  ent.entry_title AS node_title, 
+		  unix_timestamp( ent.entry_created_on ) AS entry_created
+		  FROM mt_comment com
+		  INNER JOIN mt_entry ent ON ent.entry_id = com.comment_entry_id
+          WHERE com.comment_id >%d
+		  AND unix_timestamp( com.comment_created_on ) >%d
+		  LIMIT 0 , %d ";
+  $result = db_query($sql, $comment, $timestamp, 10);
+ // print db_error();
+  while( $obj = db_fetch_object($result)) {
+    print migrate_comments_check($obj);
+	$comment = $obj->cid;
+	$timestamp = $obj->created;
+  }
+  db_set_active('default');
+  $var = array('comment_id'=>$comment, 'timestamp'=>$timestamp);
+  $variable = serialize($var);
+  variable_set('migrate_comments', $variable);
+}
+
+function migrate_comments_check($row) {
+  db_set_active('default');
+  /* Check Node */
+  $check = array('title'=>$row->node_title, 'created'=>$row->entry_created);
+  $node = node_load($check);
+  if ($node->nid) {
+    /* check comments to make sure it is not entered */
+	$sql = db_query("SELECT cid FROM {comments} WHERE nid = %d AND timestamp = %d AND name like '%s'", $node->nid, $row->created, $row->author);
+	if (db_fetch_object($sql)) {
+	  return true;
+	}
+	else {
+	    $comment['nid'] = $node->nid;
+		$comment['pid'] = 0;
+		$usr = user_load(array('mail'=>$row->mail));
+		if ($usr->uid >0) {
+		  $comment['uid'] = $usr->uid;
+		}else {
+		  $comment['uid'] = 0;
+		}
+		$comment['format'] = 1;
+		$comment['subject'] = "Re: ".strip_tags($node->title);
+		$comment['mail'] = $row->mail;
+		$comment['homepage'] = $row->url;
+		$comment['comment'] = $row->comment;
+		$comment['name'] = $row->author;
+		$comment['hostname'] = $row->ip;
+               if ($row->created > 0) 	$comment['timestamp'] = $row->created;
+		comment_save($comment);
+		return $comment['nid'];
+	}
+  }
+  else {
+    return true;
+	}
+  
+}
+/*
+function migrate_comments_cron() {
+  migrate_comments_mt();
+}*/
+
+function migrate_comments_menu() {
+  $items['comment-migrate'] = array(
+          'title' => t('Comments'),
+          'access arguments' => array('access content'),
+          'page callback' => 'migrate_comments_mt',
+          'type' => MENU_CALLBACK,
+                );
+  return $items;
+}

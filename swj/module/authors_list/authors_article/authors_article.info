@@ -1,0 +1,5 @@
+; $Id$
+name = Article Authors Listing
+description = Listing Article Authors only in several Manners
+package = "Developer Build"
+core = 6.x

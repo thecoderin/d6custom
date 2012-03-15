@@ -1,0 +1,37 @@
+<?php
+
+function workflow_set_cron() {
+  $now = 1313384400;
+  $vars = unserialize(variable_get('workflow_set'));
+  $last_update = $vars['last_node'];
+  $query = db_query("SELECT node.nid FROM node as node 
+					WHERE NOT EXISTS(SELECT wf.nid FROM workflow_node as wf WHERE wf.nid = node.nid) 
+					AND node.nid > %d AND (node.type in ('blog', 'article')) AND node.created < %d ORDER BY nid LIMIT 0, %d", $last_update, $now, 20);
+  while( $obj = db_fetch_object($query)) {
+    $nid = array('nid'=> $obj->nid);
+    $node = node_load($nid);
+	$current = workflow_node_current_state($node);
+	$state_name = 5;
+	if ($current == 1) {
+	  workflow_execute_transition($node, $state_name, $comment = NULL, $force = TRUE);
+	}
+	
+	$last_update = $node->nid;
+    unset($node);
+    $var = array('last_node'=> $last_update, 'updated'=>time());
+    $variable = serialize($var);
+    variable_set('workflow_set', $variable);
+  }
+  return true;
+}
+/*
+function workflow_set_menu() {
+    $items['workflow-swj'] = array(
+    'title' => t('Recent Articles'),
+	'description' => 'SWJ Workflow',
+	'page callback' => 'workflow_set_ting',
+	'access arguments' => array('access content'),
+	'type' => MENU_CALLBACK,
+  );
+  return $items;
+}*/

@@ -1,0 +1,247 @@
+<?php
+// $Id$
+/**
+**/
+function authors_article_menu() {
+  $items['jrnl/authors'] = array(
+		'title' => '',
+		'description' => 'List  of Article Authors in Alphabetical Order',
+		'page callback' => 'authors_article_alpha',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['jrnl/authors/post'] = array(
+		'title' => '',
+		'description' => 'List  of Article Authors by Number of Posts',
+		'page callback' => 'authors_article_posts',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['jrnl/authors/recent'] = array(
+		'title' => '',
+		'description' => 'List  of Article Authors by Recent Posts',
+		'page callback' => 'authors_article_recent',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+  return $items;
+}
+function authors_article_alpha() {
+  $query = "SELECT DISTINCT author.field_op_author_nid as authID, auth_node.title as authName FROM {node} node 
+  INNER JOIN {content_field_op_author} author ON node.nid = author.nid 
+  INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid 
+  WHERE node.type like 'article' AND node.status=1 ORDER BY auth_node.title ASC";
+  
+  $count = "SELECT COUNT(DISTINCT ( author.field_op_author_nid)) FROM {node} node INNER JOIN {content_field_op_author} author ON node.nid = author.nid INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid WHERE node.type like 'article' AND node.status=1";
+
+  $result = pager_query($query, 15, 0, $count);
+
+  $data = array();
+  $data[0]['pager'] = theme('pager', 15);
+  $data[0]['title'] = 'Authors List';
+  $data[0]['links'] = l(t("Recent post"), "jrnl/authors/recent");
+  $data[0]['links'] .=  " | ".l(t("Most posts"), "jrnl/authors/post");
+  $incr = 1;
+  while ($obj = db_fetch_object($result)) {
+$node = node_load($obj->authID);
+	$url = $node->field_author_link[0][url];
+	if($url) {
+	  $attrib = array('external'=>true, 'attributes' => array('target'=>'_blank'));
+	  $data[$incr]['link'] = l(t("More .."), $url, $attrib);
+	}
+	$data[$incr]['name'] = l(t($obj->authName),"node/".$obj->authID);
+	
+	$data_query = "SELECT COALESCE(auth.field_short_bio_value,'') as short_bio, COALESCE(auth.field_author_photo_data,'') as photo_data, images.filepath as photo_image FROM {content_type_author} auth LEFT JOIN {files} images ON auth.field_author_photo_fid =images.fid WHERE auth.nid=".$obj->authID;
+	$data_result = db_query($data_query);
+	$data_object = db_fetch_object($data_result);
+	
+	$data[$incr]['short_bio'] = $data_object->short_bio;
+	$data[$incr]['image_detail'] = (empty($data_object->photo_data) ? NULL : unserialize($data_object->photo_data));
+	
+	$default = (content_fields('field_author_photo', $node->type));
+	$default_image = $default['widget']['default_image']['filepath'];
+	$image_path = $node->field_author_photo[0]['filepath'] ? $node->field_author_photo[0]['filepath'] : $default_image;
+	$image = theme('imagecache', 'author_photo', $image_path);
+	$data[$incr]['image'] = l($image, "node/".$node->nid,array('html'=> TRUE, 'attributes'=>array('class'=>'author-img')));
+	
+	$incr++;
+  }
+	$data['authors'] = authors_article_list("auth_node.title ASC");
+
+  return theme("authors_article",$data);
+}
+
+function authors_article_posts() {
+ $query = "SELECT author.field_op_author_nid as id, auth_node.title as name, count(author.field_op_author_nid)as posts FROM {node} node 
+			INNER JOIN {content_field_op_author author} ON node.nid=author.nid  
+			INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid 
+			WHERE node.type='article' AND node.status=1 
+		GROUP BY author.field_op_author_nid ORDER BY posts DESC";
+		
+ $count = "SELECT COUNT(DISTINCT ( author.field_op_author_nid)) FROM {node} node 
+			INNER JOIN {content_field_op_author} author ON node.nid = author.nid 
+			INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid 
+		WHERE node.type like 'article' AND node.status=1";
+ $result = pager_query($query, 15, 0, $count);
+  $data = array();
+  $data[0]['pager'] = theme('pager', 15);
+  $data[0]['title'] = 'Authors List';
+  $data[0]['links'] = l(t("Recent post"), "jrnl/authors/recent");
+  $data[0]['links'] .=  " | ".l(t("Alphabetical"), "jrnl/authors");
+  $incr = 1;
+  while ($obj = db_fetch_object($result)) {
+	$node = node_load($obj->id);
+	$url = $node->field_author_link[0][url];
+	if($url) {
+	  $attrib = array('external'=>true, 'attributes' => array('target'=>'_blank'));
+	  $data[$incr]['link'] = l(t("More .."), $url, $attrib);
+	}
+	$data[$incr]['name'] = l(t($obj->name),"node/".$obj->id)." (".$obj->posts.")";
+	
+	$data_query = "SELECT COALESCE(auth.field_short_bio_value,'') as short_bio, COALESCE(auth.field_author_photo_data,'') as photo_data, images.filepath as photo_image FROM {content_type_author} auth LEFT JOIN {files} images ON auth.field_author_photo_fid =images.fid WHERE auth.nid=".$obj->id;
+	$data_result = db_query($data_query);
+	$data_object = db_fetch_object($data_result);
+	$tags = array("<p>", "</p>");
+	$data[$incr]['short_bio'] = str_replace($tags, "", $data_object->short_bio);
+	$data[$incr]['image_detail'] = (empty($data_object->photo_data) ? NULL : unserialize($data_object->photo_data));
+	
+	$default = (content_fields('field_author_photo', $node->type));
+	$default_image = $default['widget']['default_image']['filepath'];
+	$image_path = $node->field_author_photo[0]['filepath'] ? $node->field_author_photo[0]['filepath'] : $default_image;
+	$image = theme('imagecache', 'author_photo', $image_path);
+	$data[$incr]['image'] = l($image, "node/".$node->nid,array('html'=> TRUE, 'attributes'=>array('class'=>'author-img')));
+	
+	$incr++;
+  }
+  
+    $data['authors'] = authors_article_list("posts DESC");
+	return theme("authors_article",$data);
+
+}
+
+function authors_article_recent() {
+ $query = "SELECT author.field_op_author_nid as id, auth_node.title as name  FROM {node} node
+		INNER JOIN {content_field_op_author} author ON author.nid = node.nid
+		INNER JOIN {node} auth_node ON author.field_op_author_nid = auth_node.nid
+		WHERE node.type = 'article' AND node.status=1 
+		GROUP BY author.field_op_author_nid ORDER by node.created DESC";
+ $count = "SELECT COUNT(DISTINCT ( author.field_op_author_nid)) FROM {node} node
+		INNER JOIN {content_field_op_author} author ON node.nid = author.nid 
+		INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid 
+		WHERE node.type like 'article' AND node.status=1";
+ $result = pager_query($query, 15, 0, $count);
+ 
+  $data = array();
+  $data[0]['pager'] = theme('pager', 15);
+  $data[0]['title'] = 'Authors List';
+  $data[0]['links'] = l(t("Alphabetical"), "jrnl/authors");
+  $data[0]['links'] .=  " | ".l(t("Most posts"), "jrnl/authors/post");
+  $incr = 1;
+  while ($obj = db_fetch_object($result)) {
+	$node = node_load($obj->id);
+	$url = $node->field_author_link[0][url];
+	if($url) {
+	  $attrib = array('external'=>true, 'attributes' => array('target'=>'_blank'));
+	  $data[$incr]['link'] = l(t("More .."), $url, $attrib);
+	}
+	$data[$incr]['name'] = l(t($obj->name),"node/".$obj->id);
+	
+	$data_query = "SELECT COALESCE(auth.field_short_bio_value,'') as short_bio, COALESCE(auth.field_author_photo_data,'') as photo_data, images.filepath as photo_image FROM {content_type_author} auth LEFT JOIN {files} images ON auth.field_author_photo_fid =images.fid WHERE auth.nid=".$obj->id;
+	$data_result = db_query($data_query);
+	$data_object = db_fetch_object($data_result);
+	$tags = array("<p>", "</p>");
+	$data[$incr]['short_bio'] = str_replace($tags, "", $data_object->short_bio);
+	$data[$incr]['image_detail'] = (empty($data_object->photo_data) ? NULL : unserialize($data_object->photo_data));
+	
+	$default = (content_fields('field_author_photo', $node->type));
+	$default_image = $default['widget']['default_image']['filepath'];
+	$image_path = $node->field_author_photo[0]['filepath'] ? $node->field_author_photo[0]['filepath'] : $default_image;
+	$image = theme('imagecache', 'author_photo', $image_path);
+	$data[$incr]['image'] = l($image, "node/".$node->nid,array('html'=> TRUE, 'attributes'=>array('class'=>'author-img')));
+	
+	$incr++;
+  }
+ $data['authors'] = authors_article_list("node.created DESC"); 
+ return theme("authors_article",$data);		
+}
+
+function authors_article_theme() {
+  return array(
+    'authors_article' => array(
+	  'template' => 'authors_article',
+	  'arguments' => array('data'=> NULL),
+	),
+	'right_side_block' => array(
+	  'template' => 'right-side-block',
+	  'arguments' => array('data' => NULL, 'title' => NULL),
+	),
+  );
+}
+
+/**
+	To get list of all authors (content type) who have written a article.
+	Just lists name only, in the same sort order as selected.
+*/
+function authors_article_list($orderby = '') {
+	$authors = array();
+
+	 $query = "SELECT author.field_op_author_nid as id, auth_node.title as name, count(author.field_op_author_nid)as posts FROM {node} node 
+			INNER JOIN {content_field_op_author author} ON node.nid=author.nid  
+			INNER JOIN {node} auth_node ON author.field_op_author_nid=auth_node.nid 
+			WHERE node.type='article' AND node.status=1 
+		GROUP BY author.field_op_author_nid";
+		if ($orderby!='')
+			$query .= " ORDER by ".$orderby;
+
+		$q = db_query($query);
+		while ($r = db_fetch_array($q)) {
+		  $authors[] = $r;
+		}
+
+	return $authors;
+
+}
+
+function get_article_comments_data() {
+  $limit = 5;
+  $title = t("Recent Journal Comments");
+  $query = "SELECT c1.cid, c1.nid as nid, c1.name as commenter, n.title as node_comments_title,
+			n.nid as node_comments_nid, n.language as node_comments_language,     c1.timestamp as comments_timestamp from comments c1
+			JOIN (SELECT nid, max(timestamp) as timestamp from comments group by nid) as c2 on   c1.nid = c2.nid AND  c1.timestamp = c2.timestamp    
+			LEFT JOIN node n on c1.nid = n.nid  LEFT JOIN abuse_status a on c1.cid = a.oid    
+			WHERE  (n.status <> 0) AND (c1.status=0) AND (n.type in ('article')) AND (a.status IS NULL OR a.status < 3) order by c1.timestamp DESC LIMIT %d";
+  $result = db_query($query, $limit);
+  $data = array();
+   while($obj = db_fetch_object($result)) {
+        if (empty($obj->commenter)) {
+	  $obj->commenter = t("Anonymous");
+	}
+        $node_link = 'node/'.$obj->nid;
+	$attributes = array('target'=> '_blank');
+	$comment_extras = array('fragment'=>'comment-'.$obj->cid, 'external'=> FALSE,'attributes'=>$attributes);
+	$data[] = l(t($obj->commenter), $node_link, $comment_extras).t(' on ').l(t($obj->node_comments_title), $node_link);
+  }
+  
+  return theme('right_side_block', $data, $title);
+  
+  
+}
+
+/**
+* Implementation of hook_block().
+*/
+function authors_article_block($op = 'list', $delta = 0) {
+  $block = array();
+  switch ($op) {
+    case 'list':
+	  $block[0]['info'] = t('Recent Journal Comments');
+    break;
+    case 'view':
+      switch ($delta) {
+	    case 0:
+		  $block['content'] = get_article_comments_data();
+		break;
+	  }
+  }
+  return $block;
+}

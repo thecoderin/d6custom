@@ -1,0 +1,108 @@
+<?php
+
+/**
+* Implementation of hook_menu().
+*/
+function toc_guides_menu() {
+  $items['lib/toc'] = array(
+    'title' => null,
+    'description' => 'Table of Contents',
+    'page callback' => 'toc_guides_original',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['lib/toc2'] = array(
+    'title' => null,
+    'description' => 'TOC - Alphabetical',
+    'page callback' => 'toc_guides_alpha',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/toc3'] = array(
+    'title' => null,
+    'description' => 'TOC - Top Rated',
+    'page callback' => 'toc_guides_rated',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  
+ $items['lib/toc4'] = array(
+    'title' => null,
+    'description' => 'Recently Updated',
+    'page callback' => 'toc_guides_recent',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+
+  );
+	return $items;
+}
+
+function toc_guides_original() {
+  $nid = 11737;
+  $node = node_load($nid);
+  return theme('main', $node);
+}
+
+function toc_guides_alpha() {
+  $sql = db_query("SELECT nid, title FROM {node} node WHERE node.type in ('lib_guides') ORDER BY title asc");
+  $data = array();
+  	$links = l(t("TOC"), "lib/toc");
+	$links .= " | <i><b>Alphabetical</b></i>";
+	$links .= " | ".l(t("Top Rated"), "lib/toc3");
+	$links .= " | ".l(t("Recently Updated"), "lib/toc4");
+
+  while($row = db_fetch_object($sql)) {
+    $data[] = l($row->title, "node/".$row->nid);
+  }
+  
+  return theme('toc', $data,$links);
+}
+
+function toc_guides_rated() {
+ // $sql = db_query("SELECT nid, title FROM {node} node LEFT JOIN {node_counter} counter ON node.nid=counter.nid WHERE node.type in('lib_guides') ORDER BY counter.totalcount  desc");
+   $sql = db_query("SELECT nid, title FROM {node} node 
+   LEFT JOIN radioactivity ra ON node.nid = ra.id 
+ WHERE node.type in ('lib_guides') 
+   ORDER BY ra.energy DESC");
+  
+  $data = array();
+  while($row = db_fetch_object($sql)) {
+    $data[] = l($row->title, "node/".$row->nid);
+  }
+  	$links = l(t("TOC"), "lib/toc");
+	$links .= " | ".l(t("Alphabetical"), "lib/toc2");
+	$links .= " | <i><b>Top Rated</b></i>";
+	$links .= " | ".l(t("Recently Updated"), "lib/toc4");
+
+ return theme('toc', $data,$links);
+}
+
+function toc_guides_recent() {
+  $sql = db_query("SELECT nid, title FROM {node} node WHERE node.type in ('lib_guides') ORDER BY node.created desc");
+  $data = array();
+  while($row = db_fetch_object($sql)) {
+    $data[] = l($row->title, "node/".$row->nid);
+  }
+	$links = l(t("TOC"), "lib/toc");
+	$links .= " | ".l(t("Alphabetical"), "lib/toc2");
+	$links .= " | ".l(t("Top Rated"), "lib/toc3");
+	$links .= " | <i><b>Recently Updated</b></i>";
+  return theme('toc', $data,$links);
+}
+function toc_perm() {
+  return array('edit table of content');
+}
+
+function toc_guides_theme() {
+  return array(
+    'toc' => array(
+       'template'=> 'toc-guide',
+       'arguments'=> array('data'=>NULL,'links'=>NULL),
+    ),
+   'main'=> array(
+      'template'=>'toc-main',
+      'arguments'=> array('node'=>NULL),
+    ),
+  );
+}

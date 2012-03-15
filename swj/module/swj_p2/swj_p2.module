@@ -1,0 +1,307 @@
+<?php
+
+/**
+* Implementation of hook_menu().
+*/
+function swj_p2_menu() {
+  $items['lib'] = array(
+    'title' => null,
+    'description' => 'Library Landing Page',
+    'page callback' => 'swj_p2_lib_landing',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/main'] = array(
+    'title' => null,
+    'description' => 'Library Landing Page',
+    'page callback' => 'swj_p2_lib_redirect',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/book'] = array(
+    'title' => null,
+    'description' => 'Books Landing Page',
+    'page callback' => 'swj_p2_books_landing',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/list'] = array(
+    'title' => null,
+    'description' => 'Reading List Landing Page',
+    'page callback' => 'swj_p2_reading_list_landing',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['lib/article'] = array(
+    'title' => null,
+    'description' => 'Report Article Landing Page',
+    'page callback' => 'swj_p2_report_landing',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  
+ $items['news'] = array(
+    'title' => t('News Main'),
+    'description' => 'News Main Page',
+    'page callback' => 'swj_p2_newsRedirect',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+
+  );
+	return $items;
+}
+/**
+* Implementation of hook_block().
+*/
+function swj_p2_block($op = 'list', $delta = 0) {
+ $blocks = array();
+ switch ($op) {
+   case 'list':
+    $blocks[0]['info'] = t('Related News');
+   break;
+   case 'view':
+     switch ($delta) {
+	   case 0:
+	    $blocks['content'] = swj_p2_related_news();
+	  break;
+	 }
+ }
+ return $blocks;
+}
+
+function swj_p2_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch($op) {
+    case 'load':
+     if (in_array($node->type, array('lib_book', 'lib_guides', 'lib_readlist', 'lib_report_art'))) {
+         $taxo = taxonomy_node_get_terms($node);
+	 $link = array();
+	 foreach ($taxo as $tag) {
+	   $link[$tag->tid] = l($tag->name, "taxonomy/".$tag->name);
+	 }
+	 if( count($link) > 0 ) $node->terms = implode(', ', $link);
+     }
+     if ($node->type == 'lib_guides') {
+      $node->editable = false;
+      if ($GLOBALS["user"]->uid == $node->uid) {
+        $node->editable = true;
+      }
+      else if ($GLOBALS["user"]->uid != 0){
+        foreach($node->field_guide_managed as $manager) {
+           if ($GLOBALS["user"]->uid == $manager['uid']) {
+             $node->editable = true;
+             break;
+           }
+        }
+        if ($node->editable == false) $node->editable = user_access('edit any lib_guides content');
+      }
+      
+     }
+    break;
+  }
+}
+function swj_p2_menu_alter(&$items) {
+  $items['node/%node/edit']['access callback'] = 'swj_p2_node_access';
+}
+function swj_p2_node_access($op, $node) {
+  if ($op == 'update' && $node->type == 'lib_guides') {
+    if ($GLOBALS["user"]->uid == $node->uid) return true;
+    else if ($GLOBALS["user"]->uid != 0) {
+      foreach($node->field_guide_managed as $manager) {
+         if ($GLOBALS["user"]->uid == $manager['uid']) {
+           return true; 
+           break;
+         }
+      }   
+    } return node_access($op, $node); 
+  }else {
+     return node_access($op, $node);
+
+  }
+}
+
+function swj_p2_getTags($node, &$result) {
+  if (!is_array($result)) {
+    $result = array();
+  }
+  $taxonomy = $node->taxonomy;
+  foreach ($taxonomy as $term) {
+    $result[] = $term;
+  }
+  
+}
+function swj_p2_newsRedirect() {
+  drupal_goto('news/main');
+}
+function swj_p2_lib_redirect() {
+  drupal_goto('lib');
+}
+function swj_p2_related_news() {
+  $node = node_load(arg(1));
+  $categories = $node->field_news_categories;
+  $tags = array();
+  foreach ($categories as $category) {
+    $nid[] = $category['nid'];
+  }
+  unset($node);
+  $nodes = implode(',', $nid); 
+  $sql = db_query("SELECT DISTINCT(node.nid) AS nid,
+	node.title AS title
+	FROM {node} node
+	INNER JOIN {content_field_news_categories news_category} ON news_category.nid=node.nid
+	WHERE news_category.field_news_categories_nid in (%s) AND node.type in ('news') AND node.nid <> %d AND node.status<>0 ORDER BY node.created DESC LIMIT 0,5", $nodes, arg(1));
+  $data = array();
+  $i =0;
+  while ($row = db_fetch_object($sql)) {
+  	$news = node_load($row->nid);
+  	$url = $news->field_news_url[0]['url'];
+  	$attributes = array('external' => true,'attributes' => array('class' => 'news-external'));
+ 	$data[$i]['link'] = l($news->title, $url, $attributes);
+ 	$data[$i]['author'] = t($news->field_news_author[0]['value']);
+ 	$data[$i]['source'] = t($news->field_news_source[0]['value']);
+ 	$data[$i]['ed_cmt'] = ($news->field_news_ed_comment[0]['value']!='') ? 
+				l(' ',"node/".$row->nid, array( 'attributes' => array('class'=>'lk-ed-cmt'))) : '';
+ 	if ($news->comment_count > 0) {
+ 	  $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid, array( 'fragment'=>'comments') );
+ 	}
+ 	else {
+ 	  $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid);
+ 	}
+ 	$i++;
+  }
+  return theme('related_news', $data);
+ 
+}
+
+function swj_p2_lib_landing() {
+	return theme('lib_landing', $data);
+}
+
+function swj_p2_books_landing() {
+	$data['type'] = 'lib_book';
+	return theme('books_landing', $data);
+}
+
+function swj_p2_reading_list_landing() {
+	$data['type'] = 'lib_readlist';
+	return theme('reading_list_landing', $data);
+}
+
+function swj_p2_report_landing() {
+	$data['type'] = 'lib_report_art';
+	return theme('report_landing', $data);
+}
+
+function swj_p2_theme() {
+	return array(
+	  'related_news' => array(
+	    'template' => 'related-news-block',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	  'lib_landing' => array(
+	    'template' => 'lib-landing-page',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	  'books_landing' => array(
+	    'template' => 'books-landing-page',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	  'reading_list_landing' => array(
+	    'template' => 'reading-list-landing-page',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	  'report_landing' => array(
+	    'template' => 'report-landing-page',
+	    'arguments' => array('data'=> NULL),
+	  ),
+	);
+}
+
+function swj_p2_category_list($node) {
+  if(is_numeric($node->nid) && ($node->field_cat_active[0]['value'] != 0)) {
+     $limit = $node->field_cat_num_news[0]['value'];
+     $sql = db_query("SELECT DISTINCT(node.nid) as nid
+		  FROM {node} node
+		  INNER JOIN {content_field_news_categories} news_cat ON news_cat.nid = node.nid
+		  WHERE (node.status <> 0) AND (node.type in ('news')) AND (news_cat.field_news_categories_nid = %d)
+		  ORDER BY node.created DESC LIMIT 0, %d", $node->nid, $limit);
+     $data = array();
+     $i = 0;
+     while($row = db_fetch_object($sql)) {
+         $news = node_load($row->nid);
+
+  	 $url = $news->field_news_url[0]['url'];
+   	 $attributes = array('external' => true,'attributes' => array('class' => 'news-external'));
+
+         $data[$i]['title'] = l($news->title, $url, $attributes);
+ 	if ($news->comment_count > 0) {
+	   $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid, array( 'fragment'=>'comments') );
+         }else {
+           $data[$i]['comment'] = l("(".$news->comment_count.")","node/".$news->nid);
+         }
+ 	 $data[$i]['author'] = t($news->field_news_author[0]['value']);
+         $data[$i]['source'] = t($news->field_news_source[0]['value']);
+ 	 $data[$i]['ed_cmt'] = ($news->field_news_ed_comment[0]['value']!='') ? l(' ',"node/".$row->nid, array( 'attributes' => array('class'=>'lk-ed-cmt'))) : '';
+         $i++;
+     }
+   return $data;
+  }
+  return false;
+}
+/*Function for testing the output
+	Done By: Anish Karim C
+*/
+function p2_test($arr) {
+  print "<pre>";print_r($arr);print "</pre>";
+}
+/*  Function for sorting an array by key
+    Using for Category Sort to make it simple and easy
+	Done By: Anish Karim C
+	Ref: http://is.gd/MfljtT
+	@params: array to be sorted and the key needed to sort
+	Order: Descending order
+    Pass by reference
+*/
+function swj_p2_aasort (&$array, $key, $order='desc') {
+    $sorter=array();
+    $ret=array();
+    reset($array);
+    foreach ($array as $ii => $va) {
+        $sorter[$ii]=$va[$key];
+    }
+    asort($sorter);
+    foreach ($sorter as $ii => $va) {
+        $ret[$ii]=$array[$ii];
+    }
+    if($order =='desc') $array=array_reverse($ret, true);
+}
+/*  Function for removing duplicates from a multi-dimension array
+	Done By: Anish Karim C
+	@params: array - To check and remove duplicates
+                 preserveKeys - default false, if true preserve array keys
+    Output array
+*/
+
+function swj_p2_arrayUnique($array, $preserveKeys = false)
+{
+    // Unique Array for return
+    $arrayRewrite = array();
+    // Array with the md5 hashes
+    $arrayHashes = array();
+    foreach($array as $key => $item) {
+        // Serialize the current element and create a md5 hash
+        $hash = md5(serialize($item));
+        // If the md5 didn't come up yet, add the element to
+        // to arrayRewrite, otherwise drop it
+        if (!isset($arrayHashes[$hash])) {
+            // Save the current element hash
+            $arrayHashes[$hash] = $hash;
+            // Add element to the unique Array
+            if ($preserveKeys) {
+                $arrayRewrite[$key] = $item;
+            } else {
+                $arrayRewrite[] = $item;
+            }
+        }
+    }
+    return $arrayRewrite;
+}

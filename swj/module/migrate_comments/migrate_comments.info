@@ -1,0 +1,5 @@
+;$Id$
+name=Migrate New Comments
+description=Migrate New Comments from OLD
+core=6.x
+package=Developer Build

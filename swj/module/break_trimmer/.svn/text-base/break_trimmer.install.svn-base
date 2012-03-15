@@ -1,0 +1,15 @@
+<?php
+// $Id$
+/**
+ * Implementation of hook_install().
+ */
+
+ function break_trimmer_install() {			
+  $values = array('last_node'=>0, 'updated'=>0);	
+  $variable = serialize($values);
+  variable_set('break_trimmer',$variable);
+}
+
+function break_trimmer_uninstall() {
+  variable_del('break_trimmer');
+} 

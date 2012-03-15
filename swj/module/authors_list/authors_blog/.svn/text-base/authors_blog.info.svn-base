@@ -1,0 +1,5 @@
+; $Id$
+name = Blog Authors Listing
+description = Listing Blog Authors only in several Manners
+package = "Developer Build"
+core = 6.x

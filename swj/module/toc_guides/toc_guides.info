@@ -1,0 +1,6 @@
+; $Id$//
+name = Guides T O C
+description = Table of Contents for Library Guides
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma

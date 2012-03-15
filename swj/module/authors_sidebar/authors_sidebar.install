@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Implementation of hook_schema().
+ */
+function authors_sidebar_schema() {
+  $schema = array();
+  $schema['authors_sidebar'] = array(
+    'description' => 'Data Storage for Authors Sidebar',
+	'fields' => array(
+	    'id' => array(
+			'description' => 'primary key to identify author sidebar',
+			'type' => 'serial',
+			'unsigned' => TRUE,
+			'not null' => TRUE),
+		'author_nid' => array(
+			'description' => 'author node id',
+			'type' => 'int',
+			'unsigned' => TRUE,
+			'not null' => TRUE,
+			'default' => 0
+		    ),
+		'content' => array(
+			'description' => 'The Content for Sidebar',
+			'type' => 'text',
+			'not null' => TRUE,
+			'size' => 'big'
+			),
+		'timestamp' => array(
+			'description' => 'A Unix timestamp of Creation or Updation',
+			'type' => 'int',
+			'not null' => TRUE,
+			'default' => 0
+			),
+		),
+	'indexes' => array(
+		'id' => array('id'),
+		'timestamp' => array('timestamp'),
+		),
+	'unique keys' => array(
+		'author_nid' => array('author_nid'),
+		),
+	'primary key' => array('id'),
+	);
+  return $schema;
+}
+function authors_sidebar_install() {
+  drupal_install_schema('authors_sidebar');
+}
+
+function authors_sidebar_uninstall() {
+  drupal_uninstall_schema('authors_sidebar');
+  db_query("DELETE FROM {variable} WHERE name LIKE 'authors_sidebar_%'");
+}
+
+

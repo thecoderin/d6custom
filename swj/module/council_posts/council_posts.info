@@ -1,0 +1,6 @@
+; $Id$//
+name = SWJ Council Posts
+description = Enable SWJ Council Posts
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-beta

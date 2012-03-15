@@ -1,0 +1,6 @@
+; $Id$//
+name = Journal Content Management
+description = Content Management of Smallwars Journals
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-beta

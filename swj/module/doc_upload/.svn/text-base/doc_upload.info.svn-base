@@ -1,0 +1,6 @@
+; $Id$//
+name = Document Upload Content Creation.
+description = Content Creation through DOC upload
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-alpha

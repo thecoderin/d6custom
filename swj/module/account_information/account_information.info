@@ -1,0 +1,6 @@
+; $Id$//
+name = Register Account Information Settings
+description = Edit Account Information Fields on Register Form
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-beta

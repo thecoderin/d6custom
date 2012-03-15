@@ -1,0 +1,85 @@
+<?php
+
+function all_categories_menu() {
+	$items['news/cat'] = array(
+		'title' => '',
+		'description' => 'List  of Categories in Alphabetical Order',
+		'page callback' => 'all_categories_alpha',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['news/cat/recent'] = array(
+		'title' => '',
+		'description' => 'List  of Categories order by recent most headline',
+		'page callback' => 'all_categories_recent',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['news/cat/most'] = array(
+		'title' => '',
+		'description' => 'List  of Categories order by recent most headline',
+		'page callback' => 'all_categories_most',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	return $items;
+}
+
+function all_categories_alpha() {
+	$links = t('Alphabetical')." | ".l(t("Recent Headlines"), "news/cat/recent")." | ".l(t("Most Headlines"), "news/cat/most");
+	$data = all_categories_data();
+	return theme("all_categories", $links, $data);
+	
+}
+
+function all_categories_recent() {
+  $links = l(t('Alphabetical'), "news/cat")." | ".t("Recent Headlines")." | ".l(t("Most Headlines"), "news/cat/most");
+	$data = all_categories_data();
+	swj_p2_aasort($data, 'created');
+	return theme("all_categories", $links, $data);
+	
+}
+
+function all_categories_most() {
+  $links = l(t('Alphabetical'), "news/cat")." | ".l(t("Recent Headlines"),"news/cat/recent") ." | ".t("Most Headlines");
+	$data = all_categories_data();
+	swj_p2_aasort($data, 'count');
+	return theme("all_categories", $links, $data);
+}
+
+
+function all_categories_data() {
+  $query = db_query("SELECT DISTINCT(node.nid) as nid, node.title as title, revision.body as description
+	FROM node node
+	INNER JOIN node_revisions revision ON revision.vid = node.vid
+	INNER JOIN content_type_news_category ctype_category ON ctype_category.vid = node.vid 
+	WHERE node.type in('news_category')  AND node.status<>0  AND (ctype_category.field_cat_active_value<>0) ORDER BY node.title ASC");
+	$data = array();
+	$i =0;
+  while($row = db_fetch_object($query)) {
+		$count = db_query("SELECT distinct(cats.nid) as nid, node.created as created FROM `content_field_news_categories` cats
+		JOIN node node ON node.nid = cats.nid
+		where `field_news_categories_nid`=%d AND node.status<>0", $row->nid);
+        $att = array('attributes'=>array('title'=>html_entity_decode($row->description)),'html'=>true);
+		$data[$i]['link'] = l($row->title, "node/".$row->nid, $att);
+		$data[$i]['count'] = $count->num_rows;
+		$data[$i]['created'] = 0;
+		while ($r1 = db_fetch_object($count)) {
+		  if ($r1->created > $data[$i]['created']) {
+		    $data[$i]['created'] = $r1->created;
+		  }else continue;
+		}
+		$i++;
+		
+	}
+	return $data;
+}
+function all_categories_theme() {
+  return array(
+	  'all_categories' => array(
+	    'template' => 'all-categories-page',
+	    'arguments' => array('links'=> NULL, 'data'=> NULL),
+	  ),
+	);
+	
+}

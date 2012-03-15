@@ -1,0 +1,9 @@
+;$Id$
+name=Related Most popular for News Detail
+description=Module to display Related Most popular Block for News Detail
+core=6.x
+php=4.3.3
+package = "Developer Build"
+version=6.x-1.0-beta
+ 
+ 

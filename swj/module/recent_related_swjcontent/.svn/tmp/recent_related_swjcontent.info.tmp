@@ -1,0 +1,11 @@
+; $Id$//
+<<<<<<< .mine
+name =Recent Related SWJ Content for News Details
+description = Module to display Recent Related SWJ Content Block for NewsDetails Page
+=======
+name =Recent Related SWJ Content
+description = Module to display Recent Related SWJ Content blocks
+>>>>>>> .r9159
+package = "Developer Build"
+core = 6.x
+version = 6.x.0.1-gamma
