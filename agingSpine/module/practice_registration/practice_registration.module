@@ -1,0 +1,867 @@
+<?php
+
+/**
+ * Implementation of hook_init().
+ *
+ * We can't move this into admin_menu_footer(), because PHP-only based themes
+ * like chameleon load and output scripts and stylesheets in front of
+ * theme_closure(), so we ensure Admin menu's styles and scripts are loaded on
+ * all pages via hook_init().
+ */
+function practice_registration_init() {
+	$path = drupal_get_path('module', 'practice_registration');
+	drupal_add_js($path .'/practice_registration.js', 'module', 'header', TRUE);
+}
+
+function practice_registration_menu() {
+  $items['register/practice'] = array(
+    'title' => 'Register Your Practice with the Aging Spine Center',
+    'description' => 'Professional Signup Form',
+    'page callback' => 'practice_registration_details',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['register/practice/edit'] = array(
+	'title' => 'Edit Professional Practice Registration Form',
+	'Edit the contents for Professional Practice Registration',
+	'page callback' => 'practice_registration_edit',
+	'access arguments' => array('Edit Practice Registration Content'),
+	'type' => MENU_CALLBACK,
+  );
+   $items['find/member'] = array(
+	'title' => 'Find a member',
+	 'access arguments' => array('access content'),
+	'page callback' => 'find_a_member',
+	'type' => MENU_CALLBACK,
+  );
+  /* $items['find/member/ajax'] = array(
+	'title' => 'Find a member',
+	 'access arguments' => array('access content'),
+	'page callback' => 'find_a_member_ajax',
+	'type' => MENU_CALLBACK,
+  );*/
+  return $items;
+}
+
+
+function practice_registration_theme()
+{
+  return array(
+	'practice_registration' => array(
+	'template' => 'practice_registration',
+	'arguments' => array('contents'=> NULL),
+	),
+  );
+}
+
+function practice_registration_details() {
+  $content->form = drupal_get_form('practice_registration_form');
+  return theme('practice_registration', $content);
+}
+
+function practice_registration_form() {
+ $image_location = drupal_get_path('theme', 'agingspine2').'/images/practice_create_account.gif';
+ $form = array();
+ $form['markup01'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="accountRegistrationContent">',
+					'#weight' => -50,
+					);
+ $form['markup02'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div style="color:333333; font-size:12px; padding:5px 0 5px 0px">',
+					'#value' => '<b>Registration is quick and easy.</b> Just complete the form below to sign up. ',
+					'#suffix' => '</div>',
+					'#weight' => -49,
+					);
+//<div class="accountRegistrationCaption">Account Information</div>
+ $form['markup03'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="accountRegistrationCaption">',
+					'#value' => t('Account Information'),
+					'#suffix' => '</div>',
+					'#weight' => -48,
+					);
+//<div class="formContainer">
+ $form['markup04'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="formContainer">',
+					'#weight' => -47,
+					);
+//<div class="label">Your Email: <em style="color:red">*</em></div>
+ $form['markup05'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Your Email: <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -46,
+					);
+
+ $form['email_first'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg', 'autocomplete'=> 'off'),
+						'#required' => TRUE,
+						'#suffix' =>'<i style="color:666666">Your email address is kept private and never displayed on this website.</i> </div>',
+						'#weight' => -45,
+						);
+ $form['markup27'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Confirm Your Email: <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -44,
+					);
+
+ $form['email_retype'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg', 'autocomplete'=> 'off'),
+						'#required' => TRUE,
+						'#suffix' =>'<i style="color:666666">Re-type your email address to confirm.</i> </div>',
+						'#weight' => -43,
+						);
+ $form['markup06'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="clear"></div></div></div>',
+					'#weight' => -42,
+					);
+
+/*Account Information Section ends */
+
+ $form['markup11'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="basicInfoContent">',
+					'#weight' => -41,
+					);
+//<div class="accountRegistrationCaption">Basic Information</div>
+ $form['markup12'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="accountRegistrationCaption">',
+					'#value' => 'Basic Information',
+					'#suffix' => '</div>',
+					'#weight' => -40,
+					);
+//div class="formContainer">
+ $form['markup13'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="formContainer">',
+					'#weight' => -39,
+					);
+//<div class="label">First Name:  <em style="color:red">*</em></div>
+ $form['markup14'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'First Name:  <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -38,
+					);
+//<div class="textField"><input type="text" name="textfield2" id="textfield2" class="accountReg" /></div>
+ $form['first_name'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#required' => TRUE,
+						'#suffix' =>'</div>',
+						'#weight' => -37,
+						);
+// <div class="label">Middle Initial:  <em style="color:red">*</em> </div>
+ $form['markup15'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Middle Initial:',
+					'#suffix' => '</div>',
+					'#weight' => -36,
+					);
+//<div class="textField"><input type="text" name="textfield2" id="textfield2" class="basicInfoMiddile" /></div>
+ $form['middle_name'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'basicInfoMiddile'),
+						'#suffix' =>'</div>',
+						'#weight' => -35,
+						);
+//<div class="label">Last Name:   <em style="color:red">*</em> </div>
+ $form['markup16'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Last Name:   <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -34,
+					);
+//<div class="textField"><input type="text" name="textfield2" id="textfield2" class="accountReg" /></div>
+ $form['last_name'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -32,
+						);
+
+ $form['markup17'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="clear"></div></div></div>',
+					'#weight' => -31,
+					);
+
+/* Basic Information Ends Here */
+ 
+//<div class="accountRegistrationCaption">Your Credentials</div>
+ $form['markup21'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="accountRegistrationCaption">',
+					'#value' => t('Your Credentials'),
+					'#suffix' => '</div>',
+					'#weight' => -30,
+					);
+//<div class="formContainer">
+ $form['markup22'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="formContainer">',
+					'#weight' => -29,
+					);
+// <div class="label">Profession:  <em style="color:red">*</em></div>
+ $form['markup23'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Profession:  <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -28,
+					);
+//<div class="textField"><input type="text" name="textfield2" id="textfield2" class="accountReg" /></div>
+ $form['profession'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -27,
+						);
+//<div class="label">Practice Address:  <em style="color:red">*</em></div>
+ $form['markup24'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Practice Address:  <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -26,
+					);
+//<div class="textField"><input type="text" name="textfield2" id="textfield2" class="accountReg" /></div>
+ $form['pracice_address'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -25,
+						);
+//<div class="label">Phone Number: <em style="color:red">*</em></div>
+ $form['markup25'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Phone Number: <em style="color:red">*</em>',
+					'#suffix' => '</div>',
+					'#weight' => -24,
+					);
+// <div class="textField"><input type="text" name="textfield2" id="textfield2" class="accountReg" /></div>					
+ $form['phone_number'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -23,
+						);
+ $form['markup30'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Practice Website: ',
+					'#suffix' => '</div>',
+					'#weight' => -22,
+					);
+					
+ $form['website'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -21,
+						);
+						
+						
+$form['markup33'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Practice Name: ',
+					'#suffix' => '</div>',
+					'#weight' => -20,
+					);
+					
+ $form['practice_name'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -19,
+						);
+						/*
+$form['markup34'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Practice Location: ',
+					'#suffix' => '</div>',
+					'#weight' => -18,
+					);
+					
+ $form['practice_location'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -17,
+						);
+						
+$form['markup35'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'Contact Information: ',
+					'#suffix' => '</div>',
+					'#weight' => -16,
+					);
+					
+ $form['contact_information'] = array(
+						'#type' => 'textarea',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -15,
+						);*/
+																		
+
+						
+						
+$form['markup36'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'State: ',
+					'#suffix' => '</div>',
+					'#weight' => -12,
+					);
+$form['state'] = array(
+    '#type' => 'select',
+     
+    '#options' => array(
+'International'=>t('International'),
+      'AL'=>t('AL'),  
+   'AK'=>t('AK'),  
+   'AZ'=>t('AZ'),  
+   'AR'=>t('AR'),  
+   'CA'=>t('CA'),  
+   'CO'=>t('CO'),  
+   'CT'=>t('CT'),  
+   'DE'=>t('DE'),  
+   'DC'=>t('DC'),  
+   'FL'=>t('FL'),  
+   'GA'=>t('GA'),  
+   'HI'=>t('HI'),  
+   'ID'=>t('ID'),  
+   'IL'=>t('IL'),  
+   'IN'=>t('IN'),  
+   'IA'=>t('IA'),  
+   'KS'=>t('KS'),  
+   'KY'=>t('KY'),  
+   'LA'=>t('LA'),  
+   'ME'=>t('ME'),  
+   'MD'=>t('MD'),  
+   'MA'=>t('MA'),  
+   'MI'=>t('MI'),  
+   'MN'=>t('MN'),  
+   'MS'=>t('MS'),  
+   'MO'=>t('MO'),  
+   'MT'=>t('MT'),
+   'NE'=>t('NE'),
+   'NV'=>t('NV'),
+   'NH'=>t('NH'),
+   'NJ'=>t('NJ'),
+   'NM'=>t('NM'),
+   'NY'=>t('NY'),
+   'NC'=>t('NC'),
+   'ND'=>t('ND'),
+   'OH'=>t('OH'),  
+   'OK'=>t('OK'),  
+   'OR'=>t('OR'),  
+   'PA'=>t('PA'),  
+   'RI'=>t('RI'),  
+   'SC'=>t('SC'),  
+   'SD'=>t('SD'),
+   'TN'=>t('TN'),  
+   'TX'=>t('TX'), 
+   'UT'=>t('UT'),  
+   'VT'=>t('VT'),  
+   'VA'=>t('VA'),  
+   'WA'=>t('WA'),  
+   'WV'=>t('WV'),  
+   'WI'=>t('WI'),  
+   'WY'=>t('WY'),
+   
+
+    ),
+    '#weight' => -11,
+    '#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+    '#default_value' => $usage_default_value,
+ 
+  );	
+$form['markup32'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="label">',
+					'#value' => 'City: ',
+					'#suffix' => '</div>',
+					'#weight' => -14,
+					);
+					
+ $form['city'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg'),
+						'#suffix' =>'</div>',
+						'#weight' => -13,
+						);
+						
+  
+						
+ $form['markup26'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="clear"></div></div>',
+					'#weight' => -10,
+					);
+//<div class="checkbox">
+ $form['markup28'] = array(
+					'#type' => 'markup',
+					'#value' => '<div class="checkbox">',
+					'#weight' => -9,
+					);
+//<input type="checkbox" name="checkbox" id="checkbox" />&nbsp;I'd like to link to the Aging Spine Center from my practice website<br />
+ $form['checkbox1'] = array(
+						'#type' => 'checkbox',
+						'#id' => 'link_checkbox',
+						//'#prefix' => '<div class="checkbox">',
+						'#title' => '&nbsp;I\'d like to link to the Aging Spine Center from my practice website<br />',
+						'#weight' => -8,
+						);
+ $form['checkbox2'] = array(
+						'#type' => 'checkbox',
+						'#id' => 'agree_checkbox',
+						//'#prefix' => '<div class="checkbox">',
+						'#title' => '<em style="color:red">* </em>I have read and agree to the Terms and Conditions<br />',
+						'#required' => TRUE,
+						'#suffix' => '&nbsp;&nbsp;&nbsp;&nbsp; <em style="color:red">* </em> Indicates a required field<br />',
+						'#weight' => -7,
+						);
+ $form['submit_button'] = array(
+							'#type' => 'image_button',
+							'#id' => 'member_add_button',
+							'#prefix' => '<div style="text-align:right;">',
+							'#attributes' => array("src" => $GLOBALS['base_url'].'/'.$image_location, "style" => 'float:none;'),
+							'#submit' => array('practice_registration_submit'),
+							'#suffix' => '</div></div>',
+							'#disabled' => TRUE,
+							'#weight' => 0,
+							);
+ return $form;
+}
+function practice_registration_submit($form, &$form_state) {
+	$ip= ip_address() ; 
+
+	 
+$tags = get_meta_tags("http://www.geobytes.com/IpLocator.htm?GetLocation&template=php3.txt&IpAddress=$ip");
+ 
+global $base_url;
+$email1 = trim($form_state['values']['email_first']);
+$email2 = trim($form_state['values']['email_retype']);
+$content = unserialize(variable_get('member_registration_content',NULL));
+$notify_email = 'chie.ugwuala@verticalhealth.com, frani.depalo@verticalhealth.com';
+//$notify_email = 'canishk@gmail.com';
+  if( $email1 == $email2 && valid_email_address($email1) && valid_email_address($email2) ) {
+	$user = array(
+    'name' => member_registration_name($email1),
+    'status' => 1,
+	'pass' => user_password(),
+	'mail' => $email1,
+	'init'=> $email1,
+	);
+  $user_details = user_load(array('mail'=>$email1));
+  if($user_details->uid) {
+      $msg = t("Our records indicate this email address is already in our system. Please try again.");
+	  $type = "error";
+	}
+	else {
+	  user_save(NULL, $user);
+	  $user_obj = user_load(array('mail'=>$user['mail']));
+	  $params['account'] = $user_obj;
+	  $role = $user_obj->roles;
+	  $role[4] = 'physician';
+	  user_save($user_obj, array('roles' => $role));
+	  $params['user_details'] = $user;
+	  
+	  $data->name = $form_state['values']['first_name'].' '.$form_state['values']['middle_name'].' '.$form_state['values']['last_name'];
+	  $data->uid = $params['account']->uid;
+	  $data->profession = $form_state['values']['profession'];
+	  $data->pro_address = $form_state['values']['pracice_address'];
+	  $data->phone = $form_state['values']['phone_number'];
+	  $data->link = $form_state['values']['checkbox1'];
+	  $data->website = $form_state['values']['website'];
+	  $data->city =$form_state['values']["city"];
+	  $data->state =$form_state['values']["state"];
+	  $data->practice_name =$form_state['values']["practice_name"];
+	// $data->practice_location =$form_state['values']["practice_location"];
+	  $data->contact_information =$form_state['values']["contact_information"];
+	  
+	  $data->node = $base_url."/".practice_registration_save_node($data);
+	  
+	  
+	  $language = user_preferred_language($params['account']);
+	  $params['profile'] = $data;
+	  drupal_mail('practice_registration', 'activation', $user['mail'], $language, $params);
+	  $msg = t("A mail containing login details have sent.");
+	  $type = "warning";
+	  drupal_mail('practice_registration', 'notification', $notify_email, $language, $params);
+      if( $form_state['values']['checkbox1']){
+			 drupal_mail('practice_registration', 'linkto',$user['mail'], $language, $params);
+	  }
+	  drupal_goto("node/97");
+	}
+	
+  }
+  else {
+	$msg = t("Please give valid and same email on both fields.");
+	$type = "error";
+  }
+ drupal_set_message($msg, $type);
+}
+function practice_registration_name($email) {
+  $namenew = preg_replace('/@.*$/', '', $email);
+// Remove unwanted characters
+  $namenew = preg_replace('/[^a-zA-Z0-9.-]/', '', $namenew);
+// if username generated from email record already exists, append underscore and number eg:(chris_123)
+   if (db_result(db_query("SELECT count(*) FROM {users} WHERE uid <> %d AND LOWER(name) = LOWER('%s')", $account->uid, $namenew)) > 0) {
+// find the next number available to append to the name
+    $sql = "SELECT SUBSTRING_INDEX(name,'_',-1) FROM {users} WHERE name REGEXP '%s' ORDER BY CAST(SUBSTRING_INDEX(name,'_',-1) AS UNSIGNED) DESC LIMIT 1";
+    $nameidx = db_result(db_query($sql, '^'. $namenew .'_[0-9]+$'));
+    $namenew .= '_'. ($nameidx + 1);
+    }
+	return $namenew;
+}
+
+function practice_registration_mail($key, &$message, $params) {
+ $language = $message['language'];
+ $variables = user_mail_tokens($params['account'], $language);
+ $user = $params['user_details'];
+ $data = $params['profile'];
+ $logo_url = url('sites/default/files/agingspine2_logo.gif',array('absolute' => true));
+ $site_url = url(null,array('absolute' => true));
+ $headers = array(
+    'MIME-Version' => '1.0', 
+    'Content-Type' => 'text/html;charset=utf-8',
+    'X-Mailer' => 'Drupal',
+	'From' => 'Aging Spine Center <administrator@agingspinecenter.com>',
+	'Bcc' => 'lijucorratech@gmail.com, anish.karim@corratech.com',
+  );
+$message['headers'] = $headers;
+ switch ($key) {
+  case 'activation':
+    $message['subject'] = t("Account details for !username at !site", $variables, $language->language);
+    $message['body'][] = t("!username,", $variables, $language->language);
+	$message['body'][] =  t("Thank you for registering at !site. You may now log in to !login_uri using the following username and password:", $variables, $language->language);
+	$message['body'][] = t("username: !username", $variables, $language->language);
+	$message['body'][] = t("password: ").$user['pass'];
+	$message['body'][] = t("You can edit your profile ").l(t("here"),$data->node).t(" after logged into the site successfully.");
+	$message['body'][] = t("--  !site team", $variables, $language->language);	
+	
+  break;
+  case 'notification':
+    $message['subject'] = t("New user created !username at !site", $variables, $language->language);
+    $message['body'][] = t("Hi,", $variables, $language->language);
+	$message['body'][] =  t("This is to notify you that a new user is signed up under Physician section having email ").$user['mail'];
+	$message['body'][] = t("--  !site team", $variables, $language->language);	
+  break;
+  case 'linkto':
+    $message['subject'] = t("Link to !site", $variables, $language->language);
+    $message['body'][] = t("Hi,", $variables, $language->language);
+	$message['body'][] =  "<p>Thank you for registering with the Aging Spine Center."
+						." You have selected to add the Aging Spine Center logo to your website."
+						." By adding this logo to your website, your site visitors will be"
+						." able to go directly to the Aging Spine Center by clicking on the logo."
+						." To remove the logo from your website, please contact"
+						." <a href='mailto:service@alphatecspine.com'>service@alphatecspine.com</a> at any time."
+						
+						."<p>To put the logo on your site, choose the option you prefer: </p>"
+						."<p>I WILL ADD THE LOGO MYSELF </p>"
+						."<br>1. The logo's dimensions are 362px by 114px. Make sure you have an appropriate spot on your website for the logo."
+						."<br>2. Copy the code (below) for the logo."
+						."<pre>".htmlentities("<a href='".$site_url."'><img border='0' src='".$logo_url."' ></a>")." </pre>"
+						."<br>3. Paste the code into the \"source\" side of the website in the appropriate area or provide the code and dimensions to your webmaster."
+						."<br>4. If you have problems, contact your webmaster or contact us at <a href='mailto:service@alphatecspine.com'>service@alphatecspine.com</a>. "
+
+						."<p>MY WEBMASTER WILL ADD THE LOGO FOR ME<p>"
+
+						."<br>1. Logo dimensions are 362px by 114px and code is "
+						."<pre>".htmlentities("<a href='".$site_url."'><img border='0' src='".$logo_url."' ></a>")." </pre>."
+						."<br>	2. If you encounter any problems, contact us at <a href='mailto:service@alphatecspine.com'>service@alphatecspine.com</a>. "
+
+						."";
+
+	$message['body'][] = t("--  !site team", $variables, $language->language);	
+  break;
+  }
+
+$message['body'] = is_array($message['body']) ? drupal_wrap_mail(implode("<br><br>", $message['body'])) : drupal_wrap_mail($message['body']);
+//drupal_mail_send($message);
+
+}
+
+function practice_registration_save_node($data) {
+  $node = new stdClass();
+  $node->type = "healthcare_professionals";
+  $node->status = 1;
+  $node->title = $data->name;
+  $node->field_pro_profession[0]['value'] = $data->profession;
+  $node->field_pro_address[0]['value'] = $data->pro_address;
+  $node->field_pro_phone[0]['value'] = $data->phone;
+  $node->field_pro_website[0]['value'] = $data->website;
+  $node->uid = $data->uid;
+  $node->field_pro_link[0]['value'] = $data->link;
+  
+  $node->field_city[0]['value'] = $data->city  ;
+  $node->field_state[0]['value'] = $data->state  ;
+  $node->field_country[0]['value'] = $data->country ;
+  
+  $node->field_practice_name[0]['value'] = $data->practice_name ;
+ // $node->field_practice_location[0]['value'] = $data->practice_location ;
+  $node->field_contact_information[0]['value'] = $data->contact_information ;
+  
+  content_presave($node);
+  node_save($node);
+  content_insert($node);
+ // _test($node);exit;
+$node_id = $node->path;
+unset($node);
+return $node_id;
+}
+
+
+function find_a_member_ajax()
+{
+			 
+}
+function find_a_member()
+{
+		 
+	 
+	   $header = array(
+        array('data' => t('State') ),
+        array('data' => t('City') ),
+        array('data' => t('Practice Location') ),
+        array('data' => t('Name') ),
+        
+        array('data' => t('Practice Name') ),
+         array('data' => t('Contact Information ') ),
+        );
+        $sta = arg(2) ;
+        $req = arg(3) ;
+       
+switch ($sta) {
+    case "inter":
+    	
+          $result = db_query("SELECT f.field_pro_phone_value as ph, f.`field_country_value` AS cn, f.`field_state_value` AS st, f.`field_city_value` AS ct, f.field_pro_website_value AS wb, f.`field_pro_link_value` AS li, field_pro_address_value AS ad,field_practice_name_value as pn,	node.nid, node.title AS nm
+FROM `content_type_healthcare_professionals` f
+JOIN node ON node.nid = f.nid WHERE f.field_country_value !='United States'"); 
+        break;
+    case "all":
+    case "":
+          $result = db_query("SELECT f.field_pro_phone_value as ph, f.`field_country_value` AS cn, f.`field_state_value` AS st, f.`field_city_value` AS ct, f.field_pro_website_value AS wb, f.`field_pro_link_value` AS li, field_pro_address_value AS ad,field_practice_name_value as pn, node.nid, node.title AS nm
+FROM `content_type_healthcare_professionals` f
+JOIN node ON node.nid = f.nid"); 
+        break;
+     default:
+        $result = db_query("SELECT f.field_pro_phone_value as ph, f.`field_country_value` AS cn, f.`field_state_value` AS st, f.`field_city_value` AS ct, f.field_pro_website_value AS wb, f.`field_pro_link_value` AS li, field_pro_address_value AS ad,field_practice_name_value as pn, node.nid,node.title AS nm
+FROM `content_type_healthcare_professionals` f
+JOIN node ON node.nid = f.nid WHERE f.field_state_value  ='$sta'"); 
+
+        break;
+}
+
+ 
+		
+  
+    $rows = array();
+    while ($log = db_fetch_object($result)) {
+    	 
+    		
+    		//$links='<A HREF="node/'. $log->nid .'" TARGET="_blank">'.$log->nm.'</A>';
+			 if($log->wb == ''){
+				
+				//$links= 	l($log->nm,  'node/'.$log->nid, array('target' => '_blank'));
+				$links='<A HREF="/node/'. $log->nid .'" TARGET="_blank">'.$log->nm.'</A>';
+			 } else{
+			 
+				//$links= 	l($log->nm,  $log->wb, array('target' => '_blank'));
+				$links='<A HREF="'. $log->wb .'" TARGET="_blank">'.$log->nm.'</A>';
+			 }
+    		 
+    	 
+      $rows[] = array(
+        array('data' =>  $log->st),
+       array('data' =>  $log->ct ),
+       array('data' =>  $log->ad ),
+       
+         array('data' =>  $links ),
+        
+        array('data' =>  $log->pn ),
+        array('data' =>  $log->ph ),
+        );
+    }
+
+    if (empty($rows)) {
+      $rows[] = array(array('data' => t('No members available.'), 'colspan' => 4));
+    }
+
+    drupal_set_title(check_plain($node->title));
+	drupal_set_title("Find a member");
+	
+    $output.=get_rows();
+
+    $rows= theme('table', $header, $rows);
+   
+   // $rows .= theme('pager', NULL, 30, 0);
+
+
+	
+    
+	if ( $req =='ajax')
+	{
+		echo $rows;
+	}
+
+	else {
+		$output .= "<div class='find-member-data'>".$rows."</div>";
+		return $output;	
+	}
+   
+	
+} 
+/*
+function practice_registration_form(&$form_state) {
+  $form['mySelect'] = array(
+   '#type' => 'select', 
+   '#title' => t('A title'), 
+   '#default_value' => '',
+   '#options' => get_rows(),
+  );
+  return $form;
+}
+*/
+function get_rows()
+{
+	 
+ $states=array(
+ 'all'=>t('All'),  
+'International'=>t('International'),
+  
+      'AL'=>t('AL'),  
+   'AK'=>t('AK'),  
+   'AZ'=>t('AZ'),  
+   'AR'=>t('AR'),  
+   'CA'=>t('CA'),  
+   'CO'=>t('CO'),  
+   'CT'=>t('CT'),  
+   'DE'=>t('DE'),  
+   'DC'=>t('DC'),  
+   'FL'=>t('FL'),  
+   'GA'=>t('GA'),  
+   'HI'=>t('HI'),  
+   'ID'=>t('ID'),  
+   'IL'=>t('IL'),  
+   'IN'=>t('IN'),  
+   'IA'=>t('IA'),  
+   'KS'=>t('KS'),  
+   'KY'=>t('KY'),  
+   'LA'=>t('LA'),  
+   'ME'=>t('ME'),  
+   'MD'=>t('MD'),  
+   'MA'=>t('MA'),  
+   'MI'=>t('MI'),  
+   'MN'=>t('MN'),  
+   'MS'=>t('MS'),  
+   'MO'=>t('MO'),  
+   'MT'=>t('MT'),
+   'NE'=>t('NE'),
+   'NV'=>t('NV'),
+   'NH'=>t('NH'),
+   'NJ'=>t('NJ'),
+   'NM'=>t('NM'),
+   'NY'=>t('NY'),
+   'NC'=>t('NC'),
+   'ND'=>t('ND'),
+   'OH'=>t('OH'),  
+   'OK'=>t('OK'),  
+   'OR'=>t('OR'),  
+   'PA'=>t('PA'),  
+   'RI'=>t('RI'),  
+   'SC'=>t('SC'),  
+   'SD'=>t('SD'),
+   'TN'=>t('TN'),  
+   'TX'=>t('TX'), 
+   'UT'=>t('UT'),  
+   'VT'=>t('VT'),  
+   'VA'=>t('VA'),  
+   'WA'=>t('WA'),  
+   'WV'=>t('WV'),  
+   'WI'=>t('WI'),  
+   'WY'=>t('WY'),
+   
+
+    );
+    $userlists="";
+			 $userlists.="<span>Select a state &nbsp;&nbsp;</span>";
+			 $userlists.="<select id='state' class='state'>";
+	foreach($states as $key=>$value)
+	{
+		 $userlists.='<option value="'.$key.'">'.$value.'</option>';
+	}
+	  $userlists.="</select>";
+			return $userlists;
+			/*
+	$result = db_query("SELECT Distinct field_state_value FROM content_type_healthcare_professionals WHERE 	field_state_value   IS NOT NULL");
+ 	if($result)
+	{
+		if ( $result->num_rows != 0)
+		{
+			 //$userlists=array();
+			 $userlists="";
+			 $userlists.="<span>Select a state &nbsp;&nbsp;</span>";
+			 $userlists.="<select id='state' class='state'>";
+			 $userlists.='<option value="inter">International</option>';
+			  $userlists.='<option value="all">All</option>';
+			while($author_result=db_fetch_object($result))
+			{
+			 
+				$uid=db_escape_string($author_result->field_state_value);
+				 
+				//$userlists[$uid]=$uid;
+				
+				 $userlists.='<option value="'.$uid.'">'.$uid.'</option>';
+				 
+			}
+			 
+			  $userlists.="</select>";
+			return $userlists;
+		}
+	}*/
+	
+}
+
+function addhttp($url) {
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = "http://" . $url;
+    }
+    return $url;
+}
+

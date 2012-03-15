@@ -1,0 +1,267 @@
+<?php
+
+function member_registration_init() {
+  drupal_add_js(drupal_get_path('module', 'member_registration').'/js/validator.js');
+}
+
+
+/**
+* Implementing hook_menu
+*
+**/
+function member_registration_menu() {
+  $items['register/member'] = array(
+    'title' => 'Become a Member of the Aging Spine Center Community',
+    'description' => 'member Signup Form',
+    'page callback' => 'member_registration_details',
+    'access arguments' => array('access content'),  // ... has this permission.
+    'type' => MENU_CALLBACK,
+  );
+  $items['register/member/edit'] = array(
+	'title' => 'Edit Member Registration Form',
+	'Edit the Contents for Member Registration',
+	'page callback' => 'member_registration_edit',
+	'access arguments' => array('Edit Member Registration Content'),
+	'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+function member_registration_perm()
+{
+  return array(
+			"Edit Member Registration Content"
+		);
+}
+
+function member_registration_theme()
+{
+  return array(
+	'member_registration' => array(
+	'template' => 'member_registration',
+	'arguments' => array('content'=> NULL),
+	),
+  );
+}
+
+
+function member_registration_details() {
+  $variable = unserialize(variable_get('member_registration_content',NULL));
+  $content->sub_head = $variable['sub_head'];
+  $content->body = $variable['body'];
+  $content->form = drupal_get_form('member_registration_form');
+  return theme('member_registration', $content);
+}
+
+function member_registration_edit() {
+  return drupal_get_form('member_registration_edit_form');
+}
+
+function member_registration_edit_form() {
+  $form = array();
+  $content = unserialize(variable_get('member_registration_content',NULL));
+//  _test($content);
+  $form['subhead'] = array(
+						'#type' => 'textfield',
+						'#title' => 'Sub-Headline',
+						'#default_value' => $content['sub_head'],
+						'#weight' => -5,
+					);
+  $form['mail_send_to'] = array(
+						'#type' => 'textfield',
+						'#title' => 'Notification Mail Send to',
+						'#default_value' => $content['email'],
+						'#weight' => -4,
+					);
+  $form['body'] = array(
+						'#type' => 'textarea',
+						'#title' => 'Body',
+						'#default_value' => $content['body'],
+						'#weight' => -3,
+					);
+  $form['buttons']['save'] = array(
+					'#type' => 'submit',
+					'#value' => 'Save',
+					'#submit' => array('member_registration_content_save'),
+					'#weight' => 0,
+					);
+  return $form;
+}
+
+function member_registration_content_save ($form, &$form_state) {
+//  _test($form_state['values']);exit;
+  $sub_head = $form_state['values']['subhead'];
+  $body = $form_state['values']['body'];
+  $email = $form_state['values']['mail_send_to'];
+  $variable = array('sub_head' => $sub_head, 'body'=>$body, 'email'=>$email);
+  $content = serialize($variable);
+  variable_set('member_registration_content',$content);
+  drupal_goto("register/member");
+}
+
+
+function member_registration_form() {
+  $form = array();
+  $image_location = drupal_get_path('theme', 'agingspine2').'/images/create_account.gif';
+  $form['markup01'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div style="color:333333; font-size:12px; padding:5px 0 5px 0px">',
+					'#value' => '<b>Registration is quick and easy.</b> Just complete the form below to sign up.',
+					'#suffix' => '</div>',
+					'#weight' => -10,
+						);
+	$form['markup02'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="accountRegistrationCaption">',
+					'#value' => 'Account Information',
+					'#suffix' => '</div>',
+					'#weight' => -9,
+						);
+	$form['markup04'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="formContainer"><div class="label">',
+						'#value' => 'Your Email: <em style="color:red">*</em>',
+						'#suffix' => '</div>',
+						'#weight' => -8,
+						);
+						
+  $form['email_first'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg', 'autocomplete'=> 'off'),
+						'#required' => TRUE,
+						'#suffix' =>'<i style="color:666666">Your email address is kept private and never displayed on this website.</i></div>',
+						'#weight' => -7,
+						);
+  $form['markup05'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="label">',
+						'#value' => 'Confirm Your Email: <em style="color:red">*</em>',
+						'#suffix' => '</div>',
+						'#weight' => -6,
+						);
+
+  $form['email_retype'] = array(
+						'#type' => 'textfield',
+						'#prefix' => '<div class="textField">',
+						'#attributes' => array('class' => 'accountReg', 'autocomplete'=>'off'),
+						'#suffix' => '<i style="color:666666">Re-type your email address to confirm.</i></div>',
+						'#required' => TRUE,
+						'#weight' => -5,
+						);
+ $form['markup03'] = array(
+						'#type' => 'markup',
+						'#value' => '<div class="clear"></div></div>',
+						'#weight' => -4,
+						);
+ $form['checkbox'] = array(
+						'#type' => 'checkbox',
+						'#id' => 'agree_checkbox',
+						'#prefix' => '<div class="checkbox">',
+						'#title' => '<em style="color:red">* </em>I have read and agree to the Terms and Conditions',
+						'#required' => TRUE,
+						'#suffix' => '<br />&nbsp;&nbsp;&nbsp;&nbsp; <em style="color:red">* </em> Indicates a required field<br />',
+						'#weight' => -3,
+						);
+ $form['submit_button'] = array(
+							'#type' => 'image_button',
+							'#id' => 'member_add_button',
+							'#prefix' => '<div style="text-align:right; padding-right:20px;">',
+							'#attributes' => array("src" => $GLOBALS['base_url'].'/'.$image_location, "style" => 'float:none;'),
+							'#submit' => array('member_registration_submit'),
+							'#suffix' => '</div></div>',
+							'#disabled' => TRUE,
+							'#weight' => 0,
+							);
+
+	return $form;
+}
+function member_registration_submit($form, &$form_state) {
+$email1 = trim($form_state['values']['email_first']);
+$email2 = trim($form_state['values']['email_retype']);
+$content = unserialize(variable_get('member_registration_content',NULL));
+$notify_email = $content['email'];
+  if( $email1 == $email2 && valid_email_address($email1) && valid_email_address($email2) ) {
+	$user = array(
+    'name' => member_registration_name($email1),
+    'status' => 1,
+	'pass' => user_password(),
+	'mail' => $email1,
+	'init'=> $email1,
+	);
+  $user_details = user_load(array('mail'=>$email1));
+  if($user_details->uid) {
+  //_test($user_details);exit;
+      $msg = t("Our records indicate this email address is already in our system. Please try again.");
+	  $type = "error";
+	}
+	else {
+	  user_save(NULL, $user);
+	  $user_obj = user_load(array('mail'=>$user['mail']));
+	  $params['account'] = $user_obj;
+	  $role = $user_obj->roles;
+	  $role[5] = 'member';
+	  user_save($user_obj, array('roles' => $role));
+	  $params['user_details'] = $user;
+	  $language = user_preferred_language($params['account']);
+	  drupal_mail('member_registration', 'activation', $user['mail'], $language, $params);
+	  $msg = t("A mail containing login details have sent.");
+	  $type = "warning";
+	  drupal_mail('member_registration', 'notification', $notify_email, $language, $params);
+	  drupal_goto('node/98');
+	}
+	
+  }
+  else {
+	$msg = t("Please give valid and same email on both fields.");
+	$type = "error";
+  }
+ drupal_set_message($msg, $type);
+}
+
+function member_registration_name($email) {
+  $namenew = preg_replace('/@.*$/', '', $email);
+// Remove unwanted characters
+  $namenew = preg_replace('/[^a-zA-Z0-9.-]/', '', $namenew);
+// if username generated from email record already exists, append underscore and number eg:(chris_123)
+   if (db_result(db_query("SELECT count(*) FROM {users} WHERE uid <> %d AND LOWER(name) = LOWER('%s')", $account->uid, $namenew)) > 0) {
+// find the next number available to append to the name
+    $sql = "SELECT SUBSTRING_INDEX(name,'_',-1) FROM {users} WHERE name REGEXP '%s' ORDER BY CAST(SUBSTRING_INDEX(name,'_',-1) AS UNSIGNED) DESC LIMIT 1";
+    $nameidx = db_result(db_query($sql, '^'. $namenew .'_[0-9]+$'));
+    $namenew .= '_'. ($nameidx + 1);
+    }
+	return $namenew;
+}
+
+function member_registration_mail($key, &$message, $params) {
+ $language = $message['language'];
+ $variables = user_mail_tokens($params['account'], $language);
+ $user = $params['user_details'];
+  $headers = array(
+    'MIME-Version' => '1.0', 
+    'Content-Type' => 'text/html;charset=utf-8',
+    'X-Mailer' => 'Drupal',
+	'From' => 'Aging Spine Center <administrator@agingspinecenter.com>',
+	'Bcc' => 'lijucorratech@gmail.com, anish.karim@corratech.com',
+  );
+$message['headers'] = $headers;
+ switch ($key) {
+  case 'activation':
+    $message['subject'] = t("Account details for !username at !site", $variables, $language->language);
+    $message['body'][] = t("!username,", $variables, $language->language);
+	$message['body'][] =  t("<br><br>Thank you for registering at !site. You may now log in to !login_uri using the following username and password:", $variables, $language->language);
+	$message['body'][] = t("username: !username", $variables, $language->language);
+	$message['body'][] = t("password: ").$user['pass'];
+	$message['body'][] = t("<br><br>--  !site team", $variables, $language->language);	
+
+  break;
+  case 'notification':
+    $message['subject'] = t("New user created !username at !site", $variables, $language->language);
+    $message['body'][] = t("Hi,", $variables, $language->language);
+	$message['body'][] =  t("<br><br>This is to notify you that a new user is signed up under member section having email ").$user['mail'];
+	$message['body'][] = t("<br><br>--  !site team", $variables, $language->language);	
+  break;
+  }
+  $message['body'] = is_array($message['body']) ? drupal_wrap_mail(implode("<br><br>", $message['body'])) : drupal_wrap_mail($message['body']);
+//  drupal_mail_send($message);  
+
+}

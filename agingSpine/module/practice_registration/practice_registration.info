@@ -1,0 +1,11 @@
+; $Id: 
+;Done By Anish Karim C, Drupal Developer, Corratech for Aging Spine Center Built: 04/19/2011
+name = Practice Registration
+package = Developer-Build
+description =  Custom Registration form for members.
+
+dependencies[] = user
+dependencies[] = email_registration
+
+core = 6.x
+Version = "6.x-0.beta"

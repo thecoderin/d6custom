@@ -1,0 +1,289 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+b ol, ul {
+	list-style: none;
+}
+.clear {
+	clear:both;
+}
+/*reset ends here*/
+body {
+	background:url(../images/body_bg.jpg) no-repeat center top;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+	color:#333333;
+	text-align:center;
+}
+.container {
+	width:958px;
+	margin:0 auto 0 auto;
+}
+/* Home page styles starts here */
+/* Header starts here*/
+.header {
+	width:958px;
+	float:left;
+	margin:0 0 18px 0px;
+}
+.logo {
+	width:657px;
+	float:left;
+	padding-top:10px;
+	text-align:left;
+}
+.search {
+	width:301px;
+	float:left;
+	padding:43px 0 0 0px;
+	text-align:left
+}
+.searchBox {
+	width:301px;
+	height:49px;
+	padding-left: 9px;
+	padding-top: 10px;
+	background:url(../images/search_bg.png) no-repeat 0 0;
+}
+.searchBox ul {
+}
+.searchBox li {
+	float:left
+}
+#edit-search-block-form-1{
+	width:203px;
+	height:20px;
+	padding:2px;
+	border:none;
+	background:#ffffff;
+	text-transform:uppercase;
+	font-size:15px;
+	color:#000000;
+}
+#search-image-button {
+	position: absolute;
+    right: 18px;
+    top: 0;
+}
+/*sprite menu starts here*/
+#mainMenu {
+	width:958px;
+	height:46px;
+	float:left;
+}
+#mainMenu a {
+	display:block;
+	height:46px;
+	float:left;
+	background:url(../images/menu.gif); 
+}
+#mainMenu a.anatomy {
+	width:175px;
+	background-position:0 0;
+}
+#mainMenu a:hover.anatomy {
+	background-position:0 -46px;
+}
+#anatomyMainMenu a.anatomy {
+	background-position:0 -46px;
+}
+#mainMenu a.understanding {
+	width:262px;
+	background-position:-175px 0;
+}
+#mainMenu a:hover.understanding {
+	background-position:-175px -46px;
+}
+#understandingMainMenu a.understanding {
+	background-position:-175px -46px;
+}
+#mainMenu a.treatment {
+	width:181px;
+	background-position:-437px 0;
+}
+#mainMenu a:hover.treatment {
+	background-position:-437px -46px;
+}
+#treatmentMainMenu a.treatment {
+	background-position:-437px -46px;
+}
+#mainMenu a.patient {
+	width:158px;
+	background-position:-618px 0;
+}
+#mainMenu a:hover.patient {
+	background-position:-618px -46px;
+}
+#patientMainMenu a.patient {
+	background-position:-618px -46px;
+}
+#mainMenu a.physician {
+	width:182px;
+	background-position:-776px 0;
+}
+#mainMenu a:hover.physician {
+	background-position:-776px -46px;
+}
+#physicianMainMenu a.physician {
+	background-position:-776px -46px;
+}
+/*sprite menu ends here*/
+/* Header ends here*/
+
+/* content starts here */
+.contentContainer {
+	width:919px;
+	padding:0 23px 16px
+}
+.flashPlaceholder {
+	width:622px;
+	float:left;
+}
+.homeRight {
+	width:282px;
+	float:left;
+	padding:0 0 0 15px;
+	font-size:12px;
+}
+.physicianSpotLight {
+	width:282px;
+	float:left;
+	background:url(../images/physician_spotlight_line_bg.gif) repeat-y 0 0;
+	border-bottom:solid 1px #dad8d8;
+	padding-bottom:12px
+}
+.topCurve {
+	width:282px;
+	background:url(../images/physicianspotlight_topcurve.gif);
+	float:left;
+	height:35px;
+}
+.topCurve p {
+	padding:7px 0 0 15px;
+	font-size:16px;
+	font-weight:bold;
+	color:#ffffff;
+	text-align:left
+}
+.topCurve a {
+	color:#ffffff;
+	text-decoration: none;
+}
+.physicianName {
+	padding:5px 0 5px 15px;
+	clear:both
+}
+.physicianName h2 {
+	font-size:16px;
+	font-weight:normal;
+	color:#333333;
+	text-align:left;
+}
+.physicianName a {
+	color:#333333;
+	text-decoration:none;
+}
+.doctorImagContainer {
+	width:282px;
+	float:left
+}
+.doctorImag {
+	float:left;
+	width:93px;
+	padding:0 0 0 12px;
+}
+.doctorImagContent {
+	float:right;
+	width:160px
+}
+.doctorImagContent p {
+	text-align:left;
+	font-size:12px;
+	color:#333333;
+	line-height:16px;
+	padding:0 0 0 10px;
+}
+.doctorImagContent p span {
+	text-align:left;
+	font-size:12px;
+	color:#333333;
+	font-weight:bold;
+	font-style:italic;
+}
+.findSpecialist {
+	width:282px;
+	float:left;
+	position:relative;
+	border:solid 1px #dad8d8;
+	margin:12px 0 0 0px;
+	padding-bottom:5px;
+	z-index:1;
+	text-align:left;
+}
+.globe {
+	position:absolute;
+	top:-7px;
+	left:5px;
+	width:88px;
+	height:87px;
+	background:url(../images/globe.png) no-repeat 0 0;
+	z-index:2
+}
+.selectBoxContainer {
+	width:160px;
+	float:right;
+	padding:6px 12px;
+}
+select.findSpecialistBox {
+	width:175px;
+	border:solid 1px #dad8d8;
+	height:24px;
+	font-size:12px;
+	color:#999999;
+	margin-top:5px;
+}
+.searchBut {
+	margin:10px 5px 0 0px;
+	text-align:center;
+}
+.clinicalSignup {
+	width:282px;
+	float:left;
+	padding-bottom:12px;
+	margin-top:12px
+}
+.clinicalContent {
+	text-align:left;
+	color:#333333;
+	width:266px;
+	float:left;
+	padding: 10px 0 0 16px
+}
+.clinicalContent a {
+	color:#003399;
+	text-decoration:underline;
+	font-weight:bold;
+}
+/* content ends here */
+/* footer starts here*/
+.footer {
+	width:100%;
+	min-height:140px;
+	background:#f5f5f5 url(../images/footer_bg.gif) repeat-x 0 0;
+	padding:17px 0 0 0px;
+    margin-top: 40px;
+}
+.footerContainer {
+	width:919px;
+	margin:0 auto 0 auto;
+}
+.disclaimer {
+	color: #898989;
+    float: right;
+ 

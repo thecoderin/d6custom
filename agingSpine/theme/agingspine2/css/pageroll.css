@@ -1,0 +1,126 @@
+/* hp feature */
+ul.features{
+	margin: 0;
+	padding: 0;
+	width:446px;
+	overflow: hidden;
+	height: 372px;
+}
+.features li{
+	width: 622px;
+	height: 372px !important;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	display:block;
+	list-style: none;
+}
+.features li .text-wrapper{
+	position: absolute;
+	width: 230px;
+	padding: 80px 0 0 24px;
+	cursor: pointer;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+.features li .headline{
+	color:#FFFFFF;
+	font-size:25px;
+	font-weight:bold;
+	letter-spacing:-1px;
+	line-height:normal;
+	padding:0 0 10px 0;
+}
+.features li .subhead{
+	font-size: 17px;
+	line-height:normal;
+	padding: 0 0 10px 0;
+	color:#FFFFFF;
+}
+.features li .linktext {
+	font-size:16px;
+	font-weight:bold;
+	font-style:italic;
+	color:#FFFFFF;
+	text-decoration:underline;
+}
+.features li div.text-wrapper-top{
+	top: 15px;
+}
+.features li div.text-wrapper-bottom{
+	bottom: 15px;	
+}
+
+.features li .text-wrapper.light{
+}
+.features li .text-wrapper.light .headline,
+.features li .text-wrapper.light .byline{
+	color: #000000;
+}
+.features li a{
+	display: block;
+  height: 372px;
+	text-decoration: none;
+}
+.features li a:hover .byline{
+	color: #ff0000;
+}
+.jcarousel-clip{
+	width: 622px;
+	height:372px;
+	overflow:hidden;
+}
+	
+.jcarousel-control a{
+	display:block;
+	float:left;
+	height:90px;
+	text-decoration:none;
+	margin:0 1px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:16px;
+	color:#ffffff;
+	font-weight:normal;
+}
+.jcarousel-control a:hover{
+	background: url(../images/pageroll-active.jpg) no-repeat center top;
+}
+.jcarousel-control a.active{
+	background: url(../images/pageroll-active.jpg) no-repeat center bottom;
+}
+.jcarousel-control a span{
+	display:block;
+	font-weight:bold;
+	padding:4px 7px;
+	color: #ffffff;
+}
+.jcarousel-control{
+	clear:both;
+	display:block;
+	height:90px;
+	width:622px;
+	line-height: normal;
+	background: url(../images/controls-bg.jpg) left top;	
+}
+#button-1 {
+	width:208px;
+	margin-left:0;
+}
+#button-2 {
+	width:203px;
+}
+#button-3 {
+	width:207px;
+	margin-right:0;
+}
+#carousel{
+	/*-moz-border-radius:5px;
+	-webkit-border-radius:5px;*/
+	float:left;
+	width:622px;
+	background: #FFFFFF;
+	height:461px;
+	overflow:hidden;
+}
+#carousel .jquery-corner{
+ z-index: 10;
+}	
